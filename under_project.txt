@@ -1,0 +1,4 @@
+******Raycasting******
+2D ===>> Fake 3D (lancant des rayons pour detecter les objets dans un environnement).
+
+
