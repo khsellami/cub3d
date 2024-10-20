@@ -6,7 +6,7 @@
 /*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/20 11:50:01 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/10/20 13:50:20 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int main(int ac,char **av)
     //verifier data correct
     //Si la ligne contient map (1, 0, N, S, E, W) : add line to map
         return (0);
-    // if(!valid_map())
-    //     return (0);
+    if(!valid_map(&game))
+        return (ft_putstr_fd("Invalid map\n", 2), 0);
     //hena radi haneliwe events
     //keyrelease
     //destroy
