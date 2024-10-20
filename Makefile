@@ -6,7 +6,7 @@
 #    By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/19 17:16:24 by ksellami          #+#    #+#              #
-#    Updated: 2024/10/20 11:52:01 by ksellami         ###   ########.fr        #
+#    Updated: 2024/10/20 11:57:03 by ksellami         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ HEADER = cub3D.h
 FILES =   main.c \
 libft/libft_tools1.c libft/libft_tools2.c\
 parsing/checkFileName.c parsing/init.c parsing/parse_map.c\
-get_next_line/get_next_line.c
+get_next_line.c
 
 OBJS = ${FILES:%.c=%.o}
 CC = cc 
