@@ -6,7 +6,7 @@
 /*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 11:46:33 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/20 13:39:30 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/10/20 16:10:16 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,25 +39,6 @@ int is_map_line(char *line)
     }
     return (1);
 }
-// int is_map_line(char *line)
-// {
-//     int i = 0;
-
-//     // A map line must contain at least one '1', '0', 'N', 'S', 'E', or 'W'.
-//     // Iterate through each character of the line.
-//     while (line[i])
-//     {
-//         // Check if the character is valid for a map (spaces are allowed inside the map).
-//         if (line[i] != ' ' && line[i] != '1' && line[i] != '0' &&
-//             line[i] != 'N' && line[i] != 'S' && line[i] != 'E' && line[i] != 'W')
-//             return (0); // If a character is invalid, return false.
-//         i++;
-//     }
-
-//     // If we reach this point, all characters in the line are valid map elements.
-//     // Make sure the line isn't empty.
-//     return (i > 0);
-// }
 
 void parse_texture(t_game *game, char *line)
 {
@@ -84,16 +65,15 @@ void parse_color(t_game *game, char *line)
     b = ft_atoi(colors[2]);
 
     if (ft_strncmp(line - 2, "F ", 2) == 0)
-        game->floor_color = (r << 16) | (g << 8) | b; // Combine RGB values into a single integer
+        game->floor_color = (r << 16) | (g << 8) | b; 
     else if (ft_strncmp(line - 2, "C ", 2) == 0)
         game->ceiling_color = (r << 16) | (g << 8) | b;
-
-    // Free memory used for the color components
     free(colors[0]);
     free(colors[1]);
     free(colors[2]);
     free(colors);
 }
+
 void add_line_to_map(t_game *game, char *line, int index)
 {
     game->map[index] = ft_strdup(line);
@@ -114,7 +94,6 @@ int ft_str_only_contains_spaces(char *str)
 
 int parse_map(t_game *game, char *map_file)
 {
-    (void)game;
     int fd;
     char *line;
     int map_start = 0;
@@ -164,6 +143,6 @@ int parse_map(t_game *game, char *map_file)
         free(line);
     }
     close(fd);
+    game->map[map_start] = NULL;
     return (1);
 }
-
