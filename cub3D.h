@@ -6,7 +6,7 @@
 /*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/20 16:02:20 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/10/20 19:37:59 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,35 @@
 #define KeyPressMask (1L<<0) // Key press mask
 #define DestroyNotify 17     // Window close event
 #define NoEventMask 0        // No event mask
-
-
+# define PLAYER_SPEED 4
+# define TILE_SIZE 30
+# define ROTATION_SPEED 0.045
 typedef struct s_player
 {
-    double x;
-    double y;
+    int x;
+    int y;
     double angle;
+    float	fov_rd;	// field of view in radians
+    int		rot;
+    int		l_r;	// left right flag
+	int		u_d;	// up down flag
 } t_player;
+typedef struct s_ray	//the ray structure
+{
+	double	ray_ngl;	// ray angle
+	double	distance;	// distance to the wall
+	int		flag;		// flag for the wall
+}	t_ray;
 
 typedef struct s_game
 {
     void    *mlx;
     void    *window;
+    void *img;
+    char	*addr;
+	int		bits_per_px;
+	int		line_len;
+	int		endian;
     char    **map;
     char *texture_north;      // Texture path for the north direction
     char *texture_south;      // Texture path for the south direction
@@ -57,7 +73,10 @@ typedef struct s_game
     char *texture_east;       // Texture path for the east direction
     int floor_color;          // RGB color value for the floor (packed as a single integer)
     int ceiling_color;        // RGB color value for the ceiling (packed as a single integer)
+    int		w_map;		// map width
+	int		h_map;		// map height
     t_player player;
+    t_ray			ray;
 } t_game;
 
 //////libft//////
@@ -90,5 +109,23 @@ int render3d(void *param);
 //////get_next_line//////
 char	*get_next_line(int fd);
 
+//test
+float	get_h_inter(t_game *mlx, float angl);
+float	get_v_inter(t_game *mlx, float angl);
+void	cast_rays(t_game *mlx);
+void	rotate_player(t_game *mlx, int i);
+void	move_player(t_game *mlx, double move_x, double move_y);
+void	hook(t_game *mlx, double move_x, double move_y);
+int	wall_hit(float x, float y, t_game *mlx);
+int	inter_check(float angle, float *inter, float *step, int is_horizon);
+int	unit_circle(float angle, char c);
+void	render_wall(t_game *mlx, int ray);
+void	draw_wall(t_game *mlx, int ray, int t_pix, int b_pix);
+int	get_color(t_game *mlx, int flag);
+void	draw_floor_ceiling(t_game *mlx, int ray, int t_pix, int b_pix);
+float	nor_angle(float angle);
+void	my_mlx_pixel_put(t_game *mlx, int x, int y, int color);
+void	rotate_player(t_game *mlx, int i);
+void	my_mlx_pixel_put(t_game *mlx, int x, int y, int color);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 11:46:33 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/20 16:10:16 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/10/20 19:41:55 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,27 @@ int ft_str_only_contains_spaces(char *str)
     }
     return (1);
 }
+static int count_map_lines(char *map_file)
+{
+    int fd;
+    char *line;
+    int count = 0;
+
+    fd = open(map_file, O_RDONLY);
+    if (fd < 0)
+        return (-1); // Error handling
+
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        // Count non-empty map lines
+        if (!ft_str_only_contains_spaces(line) && is_map_line(line))
+            count++;
+        free(line);
+    }
+
+    close(fd);
+    return (count);
+}
 
 
 int parse_map(t_game *game, char *map_file)
@@ -98,6 +119,17 @@ int parse_map(t_game *game, char *map_file)
     char *line;
     int map_start = 0;
 
+    // Count the number of map lines
+    int map_lines = count_map_lines(map_file);
+    if (map_lines < 0)
+        return (ft_putstr_fd("Error opening file\n", 2), 0);
+
+    // Allocate memory for the map
+    game->map = malloc((map_lines + 1) * sizeof(char *));
+    if (!game->map)
+        return (ft_putstr_fd("Memory allocation error\n", 2), 0);
+
+    // Open the file again to parse
     fd = open(map_file, O_RDONLY);
     if (fd < 0)
         return (ft_putstr_fd("Error opening file\n", 2), 0);
@@ -105,37 +137,20 @@ int parse_map(t_game *game, char *map_file)
     // Read the file line by line
     while ((line = get_next_line(fd)) != NULL)
     {
-        // printf("Processing line: [%s]\n", line); // Debug: print each line as it's processed
-
-        // Skip empty lines or lines that contain only spaces
         if (line[0] == '\0' || ft_str_only_contains_spaces(line))
         {
-            // printf("Skipping empty line or line with only spaces.\n");
             free(line);
             continue;
         }
 
-        // Check if the line is a texture definition
         if (is_texture_line(line))
-        {
-            // printf("***Texture detected*** [%s]\n", line);
             parse_texture(game, line);
-        }
-        // Check if the line is a color definition (floor or ceiling)
         else if (is_color_line(line))
-        {
-            // printf("***Color detected*** [%s]\n", line);
             parse_color(game, line);
-        }
-        // Check if the line is part of the map
         else if (is_map_line(line))
-        {
-            // printf("***Map line detected*** [%s]\n", line);
             add_line_to_map(game, line, map_start++);
-        }
         else
         {
-            printf("***Invalid line detected*** [%s]\n", line);
             free(line);
             return (ft_putstr_fd("Invalid map format\n", 2), 0);
         }
@@ -143,6 +158,6 @@ int parse_map(t_game *game, char *map_file)
         free(line);
     }
     close(fd);
-    game->map[map_start] = NULL;
+    game->map[map_start] = NULL; // Mark the end of the map array
     return (1);
 }

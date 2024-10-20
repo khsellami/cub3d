@@ -1,4 +1,36 @@
 ******Raycasting******
 2D ===>> Fake 3D (lancant des rayons pour detecter les objets dans un environnement).
 
+Angle de FOV: C’est un angle exprimé en degrés qui détermine la largeur du champ de vision. Par exemple, un FOV de 60° signifie que le joueur voit un cône de 60° devant lui. Plus cet angle est large, plus le joueur peut voir une portion large de la scène (mais cela peut aussi provoquer une distorsion visuelle, un effet de "fish-eye").
 
+i send a ray : if take a long distance : the wall is away , else the wall i closer.
+the further away the wall is , the shorter we render the column of pixel.
+the closer the wall is , the taller we render the column of pixels.
+
+the height of the rectangle strip depends on the ray distance.
+the color/brightness of the rectangle strip also depends on the ray distance.
+==>>rays are cast and traced in groups.
+in a 320x200 display resolution a ray-caster traces only 320 rays.
+
+////ray casting limitations////
+*walls are always perpendicular(90 angle) with the floor
+*floor is always flat(plat)
+*walls are made of cubes that have the same size(square grid only)
+
+//0(0) ==>> 360 (2 pi): degrees
+a(rad) = a(degree) *(pi / 180)
+
+
+////
+dimension of the projection plane : 320 x 200
+angle : 60
+distance between rays : 60 / 320
+using this distance i can know how much i need to increse to move to the next rayon
+
+const FOV_ANGLE = 60 * (Math.PI / 180); //convert to radian
+const NUM_RAYS = 320 ;
+//...
+rayAngle +=  FOV_ANGLE / NUM_RAYS;
+////
+
+///part 2 ==>> video 2
