@@ -3,94 +3,101 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/20 13:33:45 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/20 13:36:20 by ksellami         ###   ########.fr       */
+/*   Created: 2024/10/22 17:22:49 by kahmada           #+#    #+#             */
+/*   Updated: 2024/10/22 17:45:00 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D.h"
-
-static int	count_words(char *s, char c)
+size_t	ft_strlcpy(char *dst, char *src, size_t dstsize)
 {
-	int	count;
-	int	i;
+	size_t	src_len;
 
-	count = 0;
+	src_len = ft_strlen(src);
+	if (src_len + 1 < dstsize)
+		ft_memcpy(dst, src, src_len + 1);
+	else if (dstsize != 0)
+	{
+		ft_memcpy(dst, src, dstsize - 1);
+		dst[dstsize - 1] = '\0';
+	}
+	return (src_len);
+}
+static void	free_sp(char **str, size_t count)
+{
+	size_t	i;
+
 	i = 0;
+	while (str[i] && i < count)
+		free(str[i++]);
+	free(str);
+}
+
+static	int	count_word(char const *s, char c)
+{
+	size_t	i;
+	size_t	count;
+
+	i = 0;
+	count = 0;
 	while (s[i] != '\0')
 	{
-		while (s[i] == c)
+		if (s[i] == c)
 			i++;
-		if (s[i] != '\0')
-			count += 1;
-		while (s[i] != c && s[i] != '\0')
-			i++;
+		else
+		{
+			count++;
+			while (s[i] != c && s[i] != '\0')
+				i++;
+		}
 	}
 	return (count);
 }
 
-static void	ft_free_split(char **split_strings, int count)
+static	char	**fill_sp(char **res, char *s, char c)
 {
 	int	i;
+	int	temp;
+	int	j;
 
+	j = 0;
 	i = 0;
-	while (i < count)
+	while (s[i])
 	{
-		free(split_strings[i]);
-		i++;
+		if (s[i] == c)
+			i++;
+		else
+		{
+			temp = i;
+			while (s[i] != c && s[i])
+				i++;
+			res[j] = malloc(i - temp + 1);
+			if (!res[j])
+				return (NULL);
+			ft_strlcpy(res[j++], s + temp, i - temp + 1);
+		}
 	}
-	free(split_strings);
-}
-
-static int	word_len(char *s, char c)
-{
-	int	len;
-
-	len = 0;
-	while (*s != c && *s != '\0')
-	{
-		len++;
-		s++;
-	}
-	return (len);
-}
-
-static char	*strndup(char *s, int n)
-{
-	char	*dup;
-
-	dup = (char *)malloc(n + 1);
-	if (dup != NULL)
-		ft_strlcpy(dup, s, n + 1);
-	return (dup);
+	res[j] = NULL;
+	return (res);
 }
 
 char	**ft_split(char *s, char c)
 {
 	char	**result;
-	int		i;
-	int		word_count;
+	size_t	count;
 
-	word_count = count_words(s, c);
-	result = (char **)malloc((word_count + 1) * sizeof(char *));
+	if (!s)
+		return (NULL);
+	count = count_word(s, c);
+	result = malloc((count + 1) * sizeof(char *));
 	if (!result)
 		return (NULL);
-	i = 0;
-	while (i < word_count)
+	if (!fill_sp(result, s, c))
 	{
-		while (*s == c)
-			s++;
-		result[i] = strndup(s, word_len(s, c));
-		if (!result[i])
-		{
-			ft_free_split(result, i);
-			return (NULL);
-		}
-		s += word_len(s, c);
-		i++;
+		free_sp(result, count);
+		return (NULL);
 	}
-	result[i] = NULL;
 	return (result);
 }

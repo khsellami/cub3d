@@ -3,20 +3,19 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+         #
+#    By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/19 17:16:24 by ksellami          #+#    #+#              #
-#    Updated: 2024/10/20 13:49:02 by ksellami         ###   ########.fr        #
+#    Updated: 2024/10/22 18:23:51 by kahmada          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = cub3D
 HEADER = cub3D.h
-FILES =   main.c \
-libft/libft_tools1.c libft/libft_tools2.c libft/ft_atoi.c libft/ft_split.c\
-parsing/checkFileName.c parsing/init.c parsing/parse_map.c parsing/checkValidMap.c\
-get_next_line.c \
-raycasting/test.c
+FILES = main.c \
+func.c \
+libft/libft_tools1.c libft/libft_tools2.c libft/ft_split.c\
+get_next_line.c
 
 OBJS = ${FILES:%.c=%.o}
 CC = cc 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/20 19:37:59 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:52:25 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,61 +23,81 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <limits.h>
+#include <stdbool.h>
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
-#define FOV 60.0
-#define KEY_W 119  // Move forward
-#define KEY_S 115  // Move backward
-#define KEY_A 97   // Turn left
-#define KEY_D 100  // Turn right
-#define KEY_ESC 65307 // Escape key
-#define speed 1
-#define KeyPress 2           // Key press event
-#define KeyPressMask (1L<<0) // Key press mask
-#define DestroyNotify 17     // Window close event
-#define NoEventMask 0        // No event mask
-# define PLAYER_SPEED 4
-# define TILE_SIZE 30
-# define ROTATION_SPEED 0.045
-typedef struct s_player
-{
-    int x;
-    int y;
-    double angle;
-    float	fov_rd;	// field of view in radians
-    int		rot;
-    int		l_r;	// left right flag
-	int		u_d;	// up down flag
-} t_player;
-typedef struct s_ray	//the ray structure
-{
-	double	ray_ngl;	// ray angle
-	double	distance;	// distance to the wall
-	int		flag;		// flag for the wall
-}	t_ray;
+#define TILE_SIZE 32
+#define WINDOW_WIDTH 1000
+#define WINDOW_HEIGHT 1000
+#define GREEN_PIXEL 0xFF00
+#define RED 0xFF0000
+#define WHITE_PIXEL 0xFFFFFF
+#define WALL 0x5454C5
+#define SPACE 0x639CD9
+#define YELLOW 0xFFFF00
+#define DARK_YELLOW 0xd7d708
+#define DARK 0x342056
+#define GRID_SIZE 32
 
-typedef struct s_game
-{
-    void    *mlx;
-    void    *window;
-    void *img;
-    char	*addr;
-	int		bits_per_px;
-	int		line_len;
-	int		endian;
-    char    **map;
-    char *texture_north;      // Texture path for the north direction
-    char *texture_south;      // Texture path for the south direction
-    char *texture_west;       // Texture path for the west direction
-    char *texture_east;       // Texture path for the east direction
-    int floor_color;          // RGB color value for the floor (packed as a single integer)
-    int ceiling_color;        // RGB color value for the ceiling (packed as a single integer)
-    int		w_map;		// map width
-	int		h_map;		// map height
-    t_player player;
-    t_ray			ray;
-} t_game;
+#define LEFT_ARROW 123
+#define RIGHT_ARROW 124
+
+#define ESC 53
+#define W_KEY 13
+#define D_KEY 2
+#define S_KEY 1
+#define A_KEY 0
+
+#define MOVE_STEP 4
+#define VIEW_ANGLE 1.0472
+#define NBR_RAYS WINDOW_WIDTH
+
+// typedef struct s_image {
+//     void *img;
+//     char *data;
+//     int width;
+//     int height;
+//     int bpp;
+//     int size_line;
+//     int endian;
+// } t_image;
+typedef struct s_textures {
+    char *north;
+    char *south;
+    char *west;
+    char *east;
+    char *wall;   // Add wall texture path
+    char *floor;  // Add floor texture path
+    char *player; // Add player texture path
+} t_textures;
+
+
+typedef struct s_img {
+    void *img_ptr;
+    char *pixel_ptr;
+    int bit_par_px;
+    int bit_order;
+    int pix_len;
+} t_img;
+
+typedef struct p {
+    char **map;         // 2D array for the game map
+    char **map2;        // Possibly a duplicate or a secondary map
+    int sol[3];         // Might be used for solution colors or coordinates
+    int ciel[3];        // Ceiling color, but it's unclear what the context is
+    void *mlx_conex;    // Connection to the MLX
+    void *mlx_window;   // Pointer to the MLX window
+    t_img img;          // Image structure for rendering
+    t_textures textures; // Textures for the map (north, south, etc.)
+    int floor;          // Floor color (stored as an int representing RGB)
+    int ceiling;        // Ceiling color (stored as an int representing RGB)
+    float x;            // Player's x-coordinate
+    float y;            // Player's y-coordinate
+    int size_f;        // Possibly the size of the floor (ambiguous)
+    int height;        // Height of the map or player view
+    float moveSpeed;   // Speed of player movement
+} Player;
+
+
 
 //////libft//////
 void	ft_putstr_fd(char *s, int fd);
@@ -86,46 +106,22 @@ int     ft_strcmp(char *s1, char *s2);
 char	*ft_strchr(char *string, int searchedChar);
 char	*ft_strdup(char *s1);
 char	*ft_strjoin(char *s1, char *s2);
-int	ft_strncmp(char *s1, char *s2, int n);
-int	ft_atoi(char *str);
-char	**ft_split(char *s, char c);
-int	ft_strlcpy(char *dest, char *src, int size);
-
-//////parsing//////
-int valid_file_name(char *f);
-int init_game(t_game *game);
-int parse_map(t_game *game, char *map_file);
-int is_texture_line(char *line);
-int is_color_line(char *line);
-int is_map_line(char *line);
-int ft_str_only_contains_spaces(char *str);
-void parse_texture(t_game *game, char *line);
-void parse_color(t_game *game, char *line);
-void add_line_to_map(t_game *game, char *line, int index);
-int valid_map(t_game *game);
-int render3d(void *param);
-
-
-//////get_next_line//////
+char	*ft_strtrim(char *s1, char *set);
+int ft_make_texture(Player *player, int j);
 char	*get_next_line(int fd);
+int	ft_strncmp(const char *s1, const char *s2, size_t n);
+char	**ft_split(char *s, char c);
+int parse_color(char *color_str, int *color);
+// t_image *create_image(void *mlx, int width, int height);
+// void destroy_image(void *mlx, t_image *img);
+// void put_pixel(t_image *img, int x, int y, int color);
+// void render(t_image *map_image);
+bool isCollidingWithWall(float newX, float newY);
+void updatePlayer(char direction);
+void readMapFromFile(const char *filename);
+int handle_input(int keycode);
+long	ft_atoi(char *s);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
 
-//test
-float	get_h_inter(t_game *mlx, float angl);
-float	get_v_inter(t_game *mlx, float angl);
-void	cast_rays(t_game *mlx);
-void	rotate_player(t_game *mlx, int i);
-void	move_player(t_game *mlx, double move_x, double move_y);
-void	hook(t_game *mlx, double move_x, double move_y);
-int	wall_hit(float x, float y, t_game *mlx);
-int	inter_check(float angle, float *inter, float *step, int is_horizon);
-int	unit_circle(float angle, char c);
-void	render_wall(t_game *mlx, int ray);
-void	draw_wall(t_game *mlx, int ray, int t_pix, int b_pix);
-int	get_color(t_game *mlx, int flag);
-void	draw_floor_ceiling(t_game *mlx, int ray, int t_pix, int b_pix);
-float	nor_angle(float angle);
-void	my_mlx_pixel_put(t_game *mlx, int x, int y, int color);
-void	rotate_player(t_game *mlx, int i);
-void	my_mlx_pixel_put(t_game *mlx, int x, int y, int color);
 
 #endif
