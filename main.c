@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/23 18:24:40 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/23 18:52:24 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,25 +52,27 @@ void render_map(Player *player, t_img *img) {
             }
         }
     }
-
-    printf("---------------hi\n");
-    exit(0);
 }
 
-void init_image(Player *player)
-{
+void init_image(Player *player) {
     player->img.img_ptr = mlx_new_image(player->mlx_conex, 400, 400);
     
     if (!player->img.img_ptr) {
-        printf("Error creating image\n");
-        exit(1); // Handle error appropriately
+        fprintf(stderr, "Error: Failed to create image\n");
+        exit(EXIT_FAILURE);
     }
 
     player->img.pixel_ptr = mlx_get_data_addr(player->img.img_ptr,
                                               &player->img.bit_par_px,
                                               &player->img.pix_len,
                                               &player->img.bit_order);
+    if (!player->img.pixel_ptr) {
+        fprintf(stderr, "Error: Failed to get image data address\n");
+        mlx_destroy_image(player->mlx_conex, player->img.img_ptr);
+        exit(EXIT_FAILURE);
+    }
 }
+
 void display_image(Player *player)
 {
     mlx_put_image_to_window(player->mlx_conex, player->mlx_window, player->img.img_ptr, 0, 0);
@@ -136,9 +138,8 @@ char *ft_strcpy(char *dest, const char *src)
     return dest;
 }
 
-void ft_mapped(int i, int fd, Player *player)
+void ft_mapped(int i,Player *player)
 {
-    (void)fd;
 
     player->map = ft_calloc(i + 2, sizeof(char *));
     if (!player->map)
@@ -160,41 +161,65 @@ void ft_mapped(int i, int fd, Player *player)
     }
 }
 
-int ft_read_map(char *file, Player *player)
-{
+int ft_read_map(char *file, Player *player) {
     int fd;
     char *line;
-    
+    int i = 0;
+
     fd = open(file, O_RDONLY);
-    if (fd == -1)
-    {
+    if (fd == -1) {
         printf("Error opening file\n");
         return -1;
     }
-    int i = 0;
+
+    // Count valid lines
     line = get_next_line(fd);
-    while (line)
-    {
-        if (line[0] == '1' || line[0] == ' ')
+    while (line) {
+        if (line[0] == '1' || line[0] == ' ') {
             i++;
-        
-        free(line);
-        line = get_next_line(fd);
-    }
-    ft_mapped(i, fd, player);
-    lseek(fd, 0, SEEK_SET);
-    int j = 0;
-    line = get_next_line(fd);
-    while (line && j < i)
-    {
-        if (line[0] == '1' || line[0] == ' ')
-        {
-            ft_strcpy(player->map[j], line);
         }
         free(line);
         line = get_next_line(fd);
     }
-    close(fd); 
+
+    // Allocate memory for the map
+    player->map = malloc(sizeof(char *) * (i + 1)); // +1 for NULL termination
+    if (!player->map) {
+        close(fd);
+        printf("Error allocating memory for map\n");
+        return -1;
+    }
+
+    // Reset file pointer
+    lseek(fd, 0, SEEK_SET);
+    
+    int j = 0;
+    line = get_next_line(fd);
+    while (line && j < i) {
+        if (line[0] == '1' || line[0] == ' ') {
+            // Allocate memory for each line and copy it
+            player->map[j] = malloc(strlen(line) + 1);
+            if (!player->map[j]) {
+                // Free previously allocated memory in case of failure
+                for (int k = 0; k < j; k++) {
+                    free(player->map[k]);
+                }
+                free(player->map);
+                close(fd);
+                printf("Error allocating memory for map line\n");
+                return -1;
+            }
+            strcpy(player->map[j], line);
+            j++;
+        }
+        free(line);
+        line = get_next_line(fd);
+    }
+
+    // Null terminate the map
+    player->map[j] = NULL;
+
+    close(fd);
     return 0;
 }
 
@@ -209,6 +234,7 @@ int main(int ac, char **av)
         return EXIT_FAILURE;
     }
 
+    // Assume parsing function checks and sets up necessary parameters
     if (parsing(ac, av) == -1) {
         printf("Error parsing arguments\n");
         return EXIT_FAILURE;
@@ -233,6 +259,12 @@ int main(int ac, char **av)
     display_image(&player);
 
     mlx_loop(player.mlx_conex);
+
+    // Free allocated memory for the map before exiting
+    for (int k = 0; player.map[k] != NULL; k++) {
+        free(player.map[k]);
+    }
+    free(player.map);
 
     return EXIT_SUCCESS; // Use EXIT_SUCCESS for successful completion
 }
