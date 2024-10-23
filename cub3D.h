@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/22 18:52:25 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/23 17:55:50 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define TILE_SIZE 32
 #define WINDOW_WIDTH 1000
@@ -122,6 +123,7 @@ void readMapFromFile(const char *filename);
 int handle_input(int keycode);
 long	ft_atoi(char *s);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
+int ft_read_map(char *file, Player *player);
 
 
 #endif

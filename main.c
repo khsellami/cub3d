@@ -6,11 +6,76 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/22 20:16:04 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/23 18:24:40 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+void put_pixel(t_img *img, int x, int y, int color)
+{
+    if (x < 0 || x >= 400 || y < 0 || y >= 400) // Ensure x/y are within bounds
+        return;
+
+    char *pixel;
+
+    pixel = img->pixel_ptr + (y * img->pix_len + x * (img->bit_par_px / 8));
+    
+    *(unsigned int *)pixel = color; // Set the pixel to the given color
+}
+void render_map(Player *player, t_img *img) {
+    int tile_size = 10;
+    int x, y, i, j;
+
+    if (!player || !player->map) {
+        printf("Error: Player or map is NULL\n");
+        return;
+    }
+
+    for (i = 0; player->map[i] != NULL; i++) {
+        printf("Rendering row %d\n", i);
+
+        for (j = 0; player->map[i][j] != '\0'; j++) {
+            printf("Accessing map[%d][%d] = %c\n", i, j, player->map[i][j]);
+
+            if (player->map[i][j] == '1') {
+                for (y = i * tile_size; y < (i + 1) * tile_size; y++) {
+                    for (x = j * tile_size; x < (j + 1) * tile_size; x++) {
+                        put_pixel(img, x, y, 0xFFFFFF);  // White for '1'
+                    }
+                }
+            } else {
+                for (y = i * tile_size; y < (i + 1) * tile_size; y++) {
+                    for (x = j * tile_size; x < (j + 1) * tile_size; x++) {
+                        put_pixel(img, x, y, 0x000000);  // Black for others
+                    }
+                }
+            }
+        }
+    }
+
+    printf("---------------hi\n");
+    exit(0);
+}
+
+void init_image(Player *player)
+{
+    player->img.img_ptr = mlx_new_image(player->mlx_conex, 400, 400);
+    
+    if (!player->img.img_ptr) {
+        printf("Error creating image\n");
+        exit(1); // Handle error appropriately
+    }
+
+    player->img.pixel_ptr = mlx_get_data_addr(player->img.img_ptr,
+                                              &player->img.bit_par_px,
+                                              &player->img.pix_len,
+                                              &player->img.bit_order);
+}
+void display_image(Player *player)
+{
+    mlx_put_image_to_window(player->mlx_conex, player->mlx_window, player->img.img_ptr, 0, 0);
+}
+
 int valid_file_name(char *f)
 {
     int fd;
@@ -32,35 +97,14 @@ int parsing(int ac, char **av)
         return (-1);
     return (0);
 }
-
-int add_col_text(int fd, Player *player, int last_size, int first)
-{
-    char *line;
-    int i = 0;
-    while ((line = get_next_line(fd)) > 0)
-    {
-        if (line[0] == '1' || line[0] == ' ')
-        {
-            player->map[i] = ft_strdup(line);
-            if (first == 0)
-            {
-                last_size = ft_strlen(line);
-                first = 1;
-            }
-            i++;
-        }
-        free(line);
-    }
-    return (last_size);
-}
-
 char **ft_calloc(int size, int size2)
 {
     char **map;
     int i;
-
+    
     map = malloc(sizeof(char *) * size);
     if (!map) return NULL;
+    
     for (i = 0; i < size; i++)
     {
         map[i] = malloc(sizeof(char) * size2);
@@ -70,69 +114,31 @@ char **ft_calloc(int size, int size2)
             free(map);
             return NULL;
         }
+        memset(map[i], 0, sizeof(char) * size2); // Initialize memory to zero
     }
     return (map);
 }
-int ft_map(Player *player)
+
+#define MAX_LINE_LENGTH 256
+
+char *ft_strcpy(char *dest, const char *src)
 {
+    if (!dest || !src)
+        return NULL;
+
     int i = 0;
-    int j = 0;
-    while (player->map[i])
+    while (src[i] && i < MAX_LINE_LENGTH - 1) // Ensure we don't overflow
     {
-        j = 0;
-        while (player->map[i][j])
-        {
-            if (player->map[i][j] != '1' && player->map[i][j] != ' ')
-                return (0);
-            j++;
-        }
+        dest[i] = src[i];
         i++;
     }
-    return (1);
-}
-void ft_add_map(Player *player, char *line, int j)
-{
-    if (ft_strlen(line) >= 1)
-    {
-        player->map[j] = ft_strtrim(line, "\n");
-        if (!player->map[j])
-        {
-            printf("Memory allocation error\n");
-            exit(1);
-        }
-    }
-    else
-    {
-        j--; 
-    }
-}
-
-
-int ft_check_map(Player *player, int fd, int i, int first)
-{
-    char *line;
-    int j =0;
-    player->map2 = ft_calloc(i + 2, sizeof(char *));
-    while(j <i)
-    {
-        line = get_next_line(fd);
-        if (!line || line[0] == '\n' || !first)
-        {
-            free(line);
-            continue;
-        }
-        ft_add_map(player, line, j);
-        free(line);
-        j++;
-    }
-    close(fd);
-    return (ft_map(player));
+    dest[i] = '\0'; // Null terminate
+    return dest;
 }
 
 void ft_mapped(int i, int fd, Player *player)
 {
-    int last_size = 0;
-    int first = 0;
+    (void)fd;
 
     player->map = ft_calloc(i + 2, sizeof(char *));
     if (!player->map)
@@ -140,30 +146,17 @@ void ft_mapped(int i, int fd, Player *player)
         printf("Memory allocation error\n");
         exit(1);
     }
-    last_size = add_col_text(fd, player, last_size, first);
-    if(!ft_check_map(player, fd, i, first))
-    {
-        printf("Error\n");
-        exit(1);
-    }
-    player->size_f = last_size;
-    close(fd);
-}
 
-void ft_replace(char **map)
-{
-    int i = 0;
-    int j;
-    while (map[i])
+    for (int j = 0; j < i + 2; j++)
     {
-        j = 0;
-        while (map[i][j])
+        player->map[j] = malloc(sizeof(char) * MAX_LINE_LENGTH);
+        if (!player->map[j])
         {
-            if (map[i][j] == ' ')
-                map[i][j] = '0';
-            j++;
+            while (j-- > 0) free(player->map[j]);
+            free(player->map);
+            printf("Memory allocation error\n");
+            exit(1);
         }
-        i++;
     }
 }
 
@@ -171,7 +164,7 @@ int ft_read_map(char *file, Player *player)
 {
     int fd;
     char *line;
-    int j = 0;
+    
     fd = open(file, O_RDONLY);
     if (fd == -1)
     {
@@ -184,130 +177,63 @@ int ft_read_map(char *file, Player *player)
     {
         if (line[0] == '1' || line[0] == ' ')
             i++;
+        
         free(line);
         line = get_next_line(fd);
     }
     ft_mapped(i, fd, player);
-    ft_replace(player->map);
-    close(fd);
-    return (ft_make_texture(player, j));
-}
-
-int ft_flor_ceiling(int *color)
-{
-    int r;
-    int g;
-    int b;
-    if (color[0] == -1 || color[1] == -1 || color[2] == -1)
-        return (-1);
-    r = color[0] * 65536;
-    g = color[1] * 256;
-    b = color[2];
-    *color = r + g + b;
-    return (0);
-}
-
-int valid_texture(Player player)
-{
-    if (!player.textures.north || !player.textures.south ||
-        !player.textures.west || !player.textures.east)
+    lseek(fd, 0, SEEK_SET);
+    int j = 0;
+    line = get_next_line(fd);
+    while (line && j < i)
     {
-        printf("Missing one or more textures.\n");
-        return 0;
-    }
-    return 1;
-}
-int valid_map(Player player)
-{
-    if (!player.map || !player.map[0])
-    {
-        printf("Map is empty or not loaded.\n");
-        return 0;
-    }
-
-    int player_found = 0;
-    for (int i = 0; player.map[i]; i++)
-    {
-        for (int j = 0; player.map[i][j]; j++)
+        if (line[0] == '1' || line[0] == ' ')
         {
-            if (player.map[i][j] == 'P')
-            {
-                player_found = 1;
-                break;
-            }
+            ft_strcpy(player->map[j], line);
         }
-        if (player_found)
-            break;
+        free(line);
+        line = get_next_line(fd);
     }
-
-    if (!player_found)
-    {
-        printf("Player start position not found in the map.\n");
-        return 0;
-    }
-
-    return 1;
-}
-
-int ft_size_map(char **map)
-{
-    int height = 0;
-    if (!map)
-        return -1;
-    while (map[height] != NULL)
-    {
-        height++;
-    }
-    return height;
+    close(fd); 
+    return 0;
 }
 
 int main(int ac, char **av)
 {
-    (void)ac;
-    (void)av;
-    Player player = {0}; // Initialize player structure
+    Player player = {0};
+
     player.mlx_conex = mlx_init();
     
-    if (!player.mlx_conex)
-    {   
+    if (!player.mlx_conex) {
         printf("Error initializing MLX\n");
-        return (EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
 
-    // if (parsing(ac, av) == -1)
-    // {
-    //     printf("Error parsing arguments\n");
-    //     return (EXIT_FAILURE);
-    // }
+    if (parsing(ac, av) == -1) {
+        printf("Error parsing arguments\n");
+        return EXIT_FAILURE;
+    }
 
-    // if (ft_read_map(av[1], &player) == -1)
-    // {
-    //     printf("Error reading map\n");
-    //     return (EXIT_FAILURE);
-    // }
+    if (ft_read_map(av[1], &player) == -1) {
+        printf("Error reading map\n");
+        return EXIT_FAILURE;
+    }
 
-    player.mlx_window = mlx_new_window(player.mlx_conex, player.size_f * 10, player.height * 10, "Cub3D");
+    player.mlx_window = mlx_new_window(player.mlx_conex, 400, 400, "Cub3D");
     
-    if (!player.mlx_window)
-    {
+    if (!player.mlx_window) {
         printf("Error creating window\n");
-        return (EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
+
+    init_image(&player);
+    
+    render_map(&player, &player.img);
+    
+    display_image(&player);
+
     mlx_loop(player.mlx_conex);
-    // if (ft_flor_ceiling(&player.floor) == -1 || ft_flor_ceiling(&player.ceiling) == -1)
-    // {
-    //     printf("Error setting floor or ceiling color\n");
-    //     return (EXIT_FAILURE);
-    // }
 
-    // if (!valid_texture(player) || !valid_map(player))
-    // {
-    //     printf("Invalid textures or map\n");
-    //     return (EXIT_FAILURE);
-    // }
-
-    // Add your rendering logic here
-    // mlx_loop(player.mlx_conex); // Start the MLX loop
-
-    return (EXIT_SUCCESS);
+    return EXIT_SUCCESS; // Use EXIT_SUCCESS for successful completion
 }
+
