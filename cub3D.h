@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/24 15:12:23 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/24 18:55:29 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,16 @@
 #define MAP_NUM_COLS 33
 #define SW 1650 
 #define SH 700
-#define FOV_ANGLE  60 * (M_PI / 180)
-#define WALL_STRIP_WIDTH 4
-#define NUM_RAYS SW / WALL_STRIP_WIDTH
+#define FOV_ANGLE (60 * (M_PI / 180))  // Example: 60 degrees in radians
 
+#define WALL_STRIP_WIDTH 4
+// #define NUM_RAYS SW / WALL_STRIP_WIDTH
+#define NUM_RAYS 120
+typedef struct s_ray
+{
+    float distance; // Distance from the player to the wall hit
+    float angle;    // The angle of the ray
+} t_ray;
 typedef struct s_player
 {
     float x;
@@ -44,13 +50,10 @@ typedef struct s_player
     int line_length;
     int endian;
     char **map;
+    t_ray rays[NUM_RAYS];
 } t_player;
 
-typedef struct s_ray
-{
-    float distance; // Distance from the player to the wall hit
-    float angle;    // The angle of the ray
-} t_ray;
+
 
 
 

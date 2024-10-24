@@ -6,11 +6,12 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/24 15:27:29 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/24 19:45:53 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+
 void init_player(t_player *p)
 {
     p->x = SW / 2;
@@ -29,12 +30,13 @@ void clear_image(t_player *player)
 
 void put_pixel(t_player *player, int x, int y, int color)
 {
-    if (x >= 0 && x < SW && y >= 0 && y < SH)
+    if (x >= 0 && x < SW && y >= 0 && y < SH)  // Ensure coordinates are within the screen bounds
     {
         char *dst = player->img_data + (y * player->line_length + x * (player->bpp / 8));
         *(unsigned int *)dst = color;
     }
 }
+
 
 void draw_player(t_player *player)
 {
@@ -105,32 +107,67 @@ void cast_ray(t_player *player, t_ray *ray)
     }
     ray->distance = -1;
 }
+void clear_screen(t_player *player)
+{
+    // Fill the image data with a solid color (e.g., black)
+    int color = 0x000000; // Background color (black)
+    for (int y = 0; y < SH; y++)
+    {
+        for (int x = 0; x < SW; x++)
+        {
+            put_pixel(player, x, y, color); // Fill every pixel with the background color
+        }
+    }
+}
+
+void render_3d_wall_slice(t_player *player, int ray_id, float distance)
+{
+    // Correct the fish-eye distortion
+    float angle_diff = player->rays[ray_id].angle - player->rotationAngle;
+    float corrected_distance = distance * cos(angle_diff);
+
+    // Calculate the wall height based on the corrected distance
+    int wall_height = (TILE_SIZE * SH) / corrected_distance;
+
+    // Calculate the starting and ending Y positions for the wall slice
+    int wall_top = (SH / 2) - (wall_height / 2);
+    if (wall_top < 0) wall_top = 0;
+
+    int wall_bottom = (SH / 2) + (wall_height / 2);
+    if (wall_bottom >= SH) wall_bottom = SH - 1;
+
+    // Calculate the x position based on ray_id
+    int x_pos = (SW / NUM_RAYS) * ray_id; // Position for the current slice
+
+    // Fill the wall slice with a solid color (you can vary this based on distance)
+    int color = 0xFF0000; // Example: Red for walls (you can change this based on distance)
+    for (int y = wall_top; y <= wall_bottom; y++)
+    {
+        put_pixel(player, x_pos, y, color); // Draw each pixel in the slice
+    }
+}
+
+
+
 
 void cast_all_rays(t_player *player)
 {
-    float ray_angle = player->rotationAngle - (FOV_ANGLE / 2);
-    t_ray rays[NUM_RAYS];
+    clear_screen(player); // Clear the screen before drawing
+
+    float ray_angle = player->rotationAngle - (FOV_ANGLE / 2); // Start from the leftmost ray
 
     for (int i = 0; i < NUM_RAYS; i++)
     {
-        rays[i].angle = ray_angle;
-        cast_ray(player, &rays[i]);
-        if (rays[i].distance > 0)
+        player->rays[i].angle = ray_angle; // Store the angle of the current ray
+        cast_ray(player, &player->rays[i]); // Perform raycasting to find wall hit
+
+        // Render the corresponding 3D wall slice for this ray
+        if (player->rays[i].distance > 0)
         {
-            int ray_end_x = player->x + rays[i].distance * cos(rays[i].angle);
-            int ray_end_y = player->y + rays[i].distance * sin(rays[i].angle);
-            float step_x = (ray_end_x - player->x) / rays[i].distance;
-            float step_y = (ray_end_y - player->y) / rays[i].distance;
-            float current_x = player->x;
-            float current_y = player->y;
-            for (int j = 0; j < rays[i].distance; j++)
-            {
-                put_pixel(player, (int)current_x, (int)current_y, 0x0000FF);
-                current_x += step_x;
-                current_y += step_y;
-            }
+            render_3d_wall_slice(player, i, player->rays[i].distance);
         }
-        ray_angle += FOV_ANGLE / NUM_RAYS;
+
+        ray_angle += FOV_ANGLE / NUM_RAYS; // Increment angle based on the total number of rays
     }
 }
 
