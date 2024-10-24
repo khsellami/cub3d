@@ -6,210 +6,243 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/23 18:52:24 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/24 15:27:29 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
-void put_pixel(t_img *img, int x, int y, int color)
+void init_player(t_player *p)
 {
-    if (x < 0 || x >= 400 || y < 0 || y >= 400) // Ensure x/y are within bounds
-        return;
-
-    char *pixel;
-
-    pixel = img->pixel_ptr + (y * img->pix_len + x * (img->bit_par_px / 8));
-    
-    *(unsigned int *)pixel = color; // Set the pixel to the given color
+    p->x = SW / 2;
+    p->y = SH / 2;
+    p->radius = 3;
+    p->rotationAngle = M_PI / 2;
+    p->moveSpeed = 2.0;
+    p->rotationSpeed = 2 * (M_PI / 180);
 }
-void render_map(Player *player, t_img *img) {
-    int tile_size = 10;
-    int x, y, i, j;
 
-    if (!player || !player->map) {
-        printf("Error: Player or map is NULL\n");
-        return;
+void clear_image(t_player *player)
+{
+    int img_size = SW * SH * 4; // 4 bytes per pixel for RGBA
+    memset(player->img_data, 0, img_size); // Set all pixels to 0 (black)
+}
+
+void put_pixel(t_player *player, int x, int y, int color)
+{
+    if (x >= 0 && x < SW && y >= 0 && y < SH)
+    {
+        char *dst = player->img_data + (y * player->line_length + x * (player->bpp / 8));
+        *(unsigned int *)dst = color;
     }
+}
 
-    for (i = 0; player->map[i] != NULL; i++) {
-        printf("Rendering row %d\n", i);
+void draw_player(t_player *player)
+{
+    int color = 0x00FF00;
+    int x_center = player->x;
+    int y_center = player->y;
 
-        for (j = 0; player->map[i][j] != '\0'; j++) {
-            printf("Accessing map[%d][%d] = %c\n", i, j, player->map[i][j]);
-
-            if (player->map[i][j] == '1') {
-                for (y = i * tile_size; y < (i + 1) * tile_size; y++) {
-                    for (x = j * tile_size; x < (j + 1) * tile_size; x++) {
-                        put_pixel(img, x, y, 0xFFFFFF);  // White for '1'
-                    }
-                }
-            } else {
-                for (y = i * tile_size; y < (i + 1) * tile_size; y++) {
-                    for (x = j * tile_size; x < (j + 1) * tile_size; x++) {
-                        put_pixel(img, x, y, 0x000000);  // Black for others
-                    }
-                }
+    for (int y = -player->radius; y <= player->radius; y++)
+    {
+        for (int x = -player->radius; x <= player->radius; x++)
+        {
+            if (x * x + y * y <= player->radius * player->radius)
+            {
+                put_pixel(player, x_center + x, y_center + y, color);
             }
         }
     }
 }
 
-void init_image(Player *player) {
-    player->img.img_ptr = mlx_new_image(player->mlx_conex, 400, 400);
-    
-    if (!player->img.img_ptr) {
-        fprintf(stderr, "Error: Failed to create image\n");
-        exit(EXIT_FAILURE);
-    }
-
-    player->img.pixel_ptr = mlx_get_data_addr(player->img.img_ptr,
-                                              &player->img.bit_par_px,
-                                              &player->img.pix_len,
-                                              &player->img.bit_order);
-    if (!player->img.pixel_ptr) {
-        fprintf(stderr, "Error: Failed to get image data address\n");
-        mlx_destroy_image(player->mlx_conex, player->img.img_ptr);
-        exit(EXIT_FAILURE);
-    }
-}
-
-void display_image(Player *player)
+void draw_map(t_player *player)
 {
-    mlx_put_image_to_window(player->mlx_conex, player->mlx_window, player->img.img_ptr, 0, 0);
-}
-
-int valid_file_name(char *f)
-{
-    int fd;
-
-    if (!f || ft_strlen(f) < 4 || ft_strcmp(&f[ft_strlen(f) - 4], ".cub") != 0)
-        return (0);
-    fd = open(f, O_RDONLY);
-    if (fd == -1)
-        return (0);
-    close(fd);
-    return (1);
-}
-
-int parsing(int ac, char **av)
-{
-    if (ac != 2)
-        return (-1);
-    if (!valid_file_name(av[1]))
-        return (-1);
-    return (0);
-}
-char **ft_calloc(int size, int size2)
-{
-    char **map;
-    int i;
-    
-    map = malloc(sizeof(char *) * size);
-    if (!map) return NULL;
-    
-    for (i = 0; i < size; i++)
+    int i = 0, j, color;
+    while (player->map[i])
     {
-        map[i] = malloc(sizeof(char) * size2);
-        if (!map[i])
+        j = 0;
+        while (player->map[i][j])
         {
-            while (i-- > 0) free(map[i]);
-            free(map);
-            return NULL;
+            color = (player->map[i][j] == '1') ? 0xFFFFFF : 0x000000; // RED for '1', BLACK for '0'
+            for (int y = i * TILE_SIZE; y < (i + 1) * TILE_SIZE; y++)
+            {
+                for (int x = j * TILE_SIZE; x < (j + 1) * TILE_SIZE; x++)
+                {
+                    put_pixel(player, x, y, color);
+                }
+            }
+            j++;
         }
-        memset(map[i], 0, sizeof(char) * size2); // Initialize memory to zero
-    }
-    return (map);
-}
-
-#define MAX_LINE_LENGTH 256
-
-char *ft_strcpy(char *dest, const char *src)
-{
-    if (!dest || !src)
-        return NULL;
-
-    int i = 0;
-    while (src[i] && i < MAX_LINE_LENGTH - 1) // Ensure we don't overflow
-    {
-        dest[i] = src[i];
         i++;
     }
-    dest[i] = '\0'; // Null terminate
-    return dest;
 }
 
-void ft_mapped(int i,Player *player)
+int is_wall(float x, float y, t_player *p)
 {
+    int mapX = (int)(x / TILE_SIZE);
+    int mapY = (int)(y / TILE_SIZE);
 
-    player->map = ft_calloc(i + 2, sizeof(char *));
-    if (!player->map)
-    {
-        printf("Memory allocation error\n");
-        exit(1);
-    }
+    if (mapX < 0 || mapY < 0 || mapX >= MAP_NUM_COLS || mapY >= MAP_NUM_ROWS)
+        return 1;
+    return (p->map[mapY][mapX] == '1');
+}
 
-    for (int j = 0; j < i + 2; j++)
+void cast_ray(t_player *player, t_ray *ray)
+{
+    float ray_x = player->x;
+    float ray_y = player->y;
+    float ray_dx = cos(ray->angle);
+    float ray_dy = sin(ray->angle);
+
+    while (ray_x >= 0 && ray_x < SW && ray_y >= 0 && ray_y < SH)
     {
-        player->map[j] = malloc(sizeof(char) * MAX_LINE_LENGTH);
-        if (!player->map[j])
+        if (is_wall(ray_x, ray_y,player))
         {
-            while (j-- > 0) free(player->map[j]);
-            free(player->map);
-            printf("Memory allocation error\n");
-            exit(1);
+            ray->distance = sqrt((ray_x - player->x) * (ray_x - player->x) + (ray_y - player->y) * (ray_y - player->y));
+            return;
         }
+        ray_x += ray_dx;
+        ray_y += ray_dy;
+    }
+    ray->distance = -1;
+}
+
+void cast_all_rays(t_player *player)
+{
+    float ray_angle = player->rotationAngle - (FOV_ANGLE / 2);
+    t_ray rays[NUM_RAYS];
+
+    for (int i = 0; i < NUM_RAYS; i++)
+    {
+        rays[i].angle = ray_angle;
+        cast_ray(player, &rays[i]);
+        if (rays[i].distance > 0)
+        {
+            int ray_end_x = player->x + rays[i].distance * cos(rays[i].angle);
+            int ray_end_y = player->y + rays[i].distance * sin(rays[i].angle);
+            float step_x = (ray_end_x - player->x) / rays[i].distance;
+            float step_y = (ray_end_y - player->y) / rays[i].distance;
+            float current_x = player->x;
+            float current_y = player->y;
+            for (int j = 0; j < rays[i].distance; j++)
+            {
+                put_pixel(player, (int)current_x, (int)current_y, 0x0000FF);
+                current_x += step_x;
+                current_y += step_y;
+            }
+        }
+        ray_angle += FOV_ANGLE / NUM_RAYS;
     }
 }
 
-int ft_read_map(char *file, Player *player) {
+int key_eshap(int keycode, t_player *player)
+{
+    float new_x = player->x;
+    float new_y = player->y;
+
+    if (keycode == 123)
+        player->rotationAngle -= player->rotationSpeed;
+    else if (keycode == 124)
+        player->rotationAngle += player->rotationSpeed;
+    else if (keycode == 126)
+    {
+        new_x += cos(player->rotationAngle) * player->moveSpeed;
+        new_y += sin(player->rotationAngle) * player->moveSpeed;
+    }
+    else if (keycode == 125)
+    {
+        new_x -= cos(player->rotationAngle) * player->moveSpeed;
+        new_y -= sin(player->rotationAngle) * player->moveSpeed;
+    }
+    if (!is_wall(new_x, new_y,player))
+    {
+        player->x = new_x;
+        player->y = new_y;
+    }
+    clear_image(player);
+    draw_map(player); // Redraw the map onto the image
+    draw_player(player); // Draw the player onto the image
+    cast_all_rays(player);
+    mlx_put_image_to_window(player->mlx, player->window, player->img, 0, 0); // Display the image
+    return (0);
+}
+
+int close_window(t_player *player)
+{
+    if (player->map)
+    {
+        for (int i = 0; player->map[i]; i++)
+        {
+            free(player->map[i]);
+        }
+        free(player->map);
+    }
+    mlx_destroy_window(player->mlx, player->window);
+    exit(0);
+    return 0;
+}
+
+int ft_read_map(char *file, t_player *player)
+{
     int fd;
     char *line;
     int i = 0;
 
     fd = open(file, O_RDONLY);
-    if (fd == -1) {
+    if (fd == -1)
+    {
         printf("Error opening file\n");
         return -1;
     }
-
-    // Count valid lines
     line = get_next_line(fd);
-    while (line) {
-        if (line[0] == '1' || line[0] == ' ') {
+    while (line)
+    {
+        if (line[0] == '1' || line[0] == ' ')
             i++;
-        }
         free(line);
         line = get_next_line(fd);
     }
-
     // Allocate memory for the map
-    player->map = malloc(sizeof(char *) * (i + 1)); // +1 for NULL termination
-    if (!player->map) {
+    player->map = malloc(sizeof(char *) * (i + 1));
+    if (!player->map)
+    {
         close(fd);
         printf("Error allocating memory for map\n");
         return -1;
     }
-
     // Reset file pointer
     lseek(fd, 0, SEEK_SET);
-    
     int j = 0;
     line = get_next_line(fd);
     while (line && j < i) {
-        if (line[0] == '1' || line[0] == ' ') {
-            // Allocate memory for each line and copy it
+        if (line[0] == '1' || line[0] == ' ')
+        {
             player->map[j] = malloc(strlen(line) + 1);
-            if (!player->map[j]) {
-                // Free previously allocated memory in case of failure
-                for (int k = 0; k < j; k++) {
+            if (!player->map[j])
+            {
+                for (int k = 0; k < j; k++)
                     free(player->map[k]);
-                }
                 free(player->map);
                 close(fd);
                 printf("Error allocating memory for map line\n");
                 return -1;
             }
             strcpy(player->map[j], line);
+
+            // Check for 'N' in the current line
+            char *n_pos = strchr(player->map[j], 'N');
+            if (n_pos) {
+                // Calculate player position in pixels based on 'N' location
+                int x_pos = n_pos - player->map[j]; // Column index of 'N'
+                int y_pos = j; // Row index of 'N'
+
+                // Set the player's position in the map
+                player->x = (x_pos * TILE_SIZE) + (TILE_SIZE / 2);
+                player->y = (y_pos * TILE_SIZE) + (TILE_SIZE / 2);
+
+                // Replace 'N' with '0' so it's treated as an empty space
+                *n_pos = '0';
+            }
+
             j++;
         }
         free(line);
@@ -223,49 +256,34 @@ int ft_read_map(char *file, Player *player) {
     return 0;
 }
 
-int main(int ac, char **av)
+int main(int ac , char **av)
 {
-    Player player = {0};
-
-    player.mlx_conex = mlx_init();
+    (void)ac;
+    t_player p;
     
-    if (!player.mlx_conex) {
-        printf("Error initializing MLX\n");
-        return EXIT_FAILURE;
-    }
-
-    // Assume parsing function checks and sets up necessary parameters
-    if (parsing(ac, av) == -1) {
-        printf("Error parsing arguments\n");
-        return EXIT_FAILURE;
-    }
-
-    if (ft_read_map(av[1], &player) == -1) {
+    init_player(&p);
+    if (ft_read_map(av[1], &p) == -1)
+    {
         printf("Error reading map\n");
         return EXIT_FAILURE;
     }
-
-    player.mlx_window = mlx_new_window(player.mlx_conex, 400, 400, "Cub3D");
+    p.mlx = mlx_init();
+    if (!(p.mlx))
+        return (0);
+    p.window = mlx_new_window(p.mlx, SW, SH, "First Map");
+    if (!(p.window))
+        return (0);
     
-    if (!player.mlx_window) {
-        printf("Error creating window\n");
-        return EXIT_FAILURE;
-    }
-
-    init_image(&player);
-    
-    render_map(&player, &player.img);
-    
-    display_image(&player);
-
-    mlx_loop(player.mlx_conex);
-
-    // Free allocated memory for the map before exiting
-    for (int k = 0; player.map[k] != NULL; k++) {
-        free(player.map[k]);
-    }
-    free(player.map);
-
-    return EXIT_SUCCESS; // Use EXIT_SUCCESS for successful completion
+    p.img = mlx_new_image(p.mlx, SW, SH);
+    p.img_data = mlx_get_data_addr(p.img, &p.bpp, &p.line_length, &p.endian);
+    clear_image(&p);
+    draw_map(&p);
+    draw_player(&p);
+    cast_all_rays(&p);
+    mlx_put_image_to_window(p.mlx, p.window, p.img, 0, 0);
+    mlx_hook(p.window, 2, 0, (int (*)(int, void *))key_eshap, &p);
+    mlx_hook(p.window, 17, 0, close_window, &p);
+    mlx_loop(p.mlx);
+    return (0);
 }
 
