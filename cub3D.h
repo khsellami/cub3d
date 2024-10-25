@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/24 18:55:29 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/25 12:39:19 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 #include <mlx.h>
 #include <libc.h>
 #include <math.h>
+#define CEILING_COLOR 0xA0C8E0 // Example color for the ceiling (light blue)
+#define FLOOR_COLOR 0xA0A0A0 // Example color for the floor (gray)
+
 #define TILE_SIZE 50
 #define MAP_NUM_ROWS 14
 #define MAP_NUM_COLS 33
@@ -58,6 +61,7 @@ typedef struct s_player
 
 
 //////libft//////
+void draw_floor_and_ceiling(t_player *player);
 void	ft_putstr_fd(char *s, int fd);
 int     ft_strlen(char *str);
 int     ft_strcmp(char *s1, char *s2);

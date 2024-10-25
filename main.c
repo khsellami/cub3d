@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/24 19:45:53 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/25 12:40:27 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ void init_player(t_player *p)
 
 void clear_image(t_player *player)
 {
-    int img_size = SW * SH * 4; // 4 bytes per pixel for RGBA
-    memset(player->img_data, 0, img_size); // Set all pixels to 0 (black)
+    int img_size = SW * SH * 4;
+    memset(player->img_data, 0, img_size);
 }
 
 void put_pixel(t_player *player, int x, int y, int color)
 {
-    if (x >= 0 && x < SW && y >= 0 && y < SH)  // Ensure coordinates are within the screen bounds
+    if (x >= 0 && x < SW && y >= 0 && y < SH)
     {
         char *dst = player->img_data + (y * player->line_length + x * (player->bpp / 8));
         *(unsigned int *)dst = color;
@@ -64,7 +64,7 @@ void draw_map(t_player *player)
         j = 0;
         while (player->map[i][j])
         {
-            color = (player->map[i][j] == '1') ? 0xFFFFFF : 0x000000; // RED for '1', BLACK for '0'
+            color = (player->map[i][j] == '1') ? 0xFFFFFF : 0x000000;
             for (int y = i * TILE_SIZE; y < (i + 1) * TILE_SIZE; y++)
             {
                 for (int x = j * TILE_SIZE; x < (j + 1) * TILE_SIZE; x++)
@@ -122,54 +122,68 @@ void clear_screen(t_player *player)
 
 void render_3d_wall_slice(t_player *player, int ray_id, float distance)
 {
-    // Correct the fish-eye distortion
     float angle_diff = player->rays[ray_id].angle - player->rotationAngle;
     float corrected_distance = distance * cos(angle_diff);
-
-    // Calculate the wall height based on the corrected distance
     int wall_height = (TILE_SIZE * SH) / corrected_distance;
-
-    // Calculate the starting and ending Y positions for the wall slice
     int wall_top = (SH / 2) - (wall_height / 2);
     if (wall_top < 0) wall_top = 0;
 
     int wall_bottom = (SH / 2) + (wall_height / 2);
     if (wall_bottom >= SH) wall_bottom = SH - 1;
-
-    // Calculate the x position based on ray_id
-    int x_pos = (SW / NUM_RAYS) * ray_id; // Position for the current slice
-
-    // Fill the wall slice with a solid color (you can vary this based on distance)
-    int color = 0xFF0000; // Example: Red for walls (you can change this based on distance)
+    int x_pos = (SW / NUM_RAYS) * ray_id;
+    int color = 0xFF0000;
     for (int y = wall_top; y <= wall_bottom; y++)
     {
-        put_pixel(player, x_pos, y, color); // Draw each pixel in the slice
+        put_pixel(player, x_pos, y, color);
     }
 }
 
 
+void render_player(t_player *player)
+{
+    int player_x = (int)(player->x);
+    int player_y = (int)(player->y);
+    int radius = player->radius;
+
+    for (int y = -radius; y <= radius; y++)
+    {
+        for (int x = -radius; x <= radius; x++)
+        {
+            if (x * x + y * y <= radius * radius)
+            {
+                int px = player_x + x;
+                int py = player_y + y;
+
+                if (px >= 0 && px < SW && py >= 0 && py < SH)
+                {
+                    put_pixel(player, px, py, 0xFFFF00);
+                }
+            }
+        }
+    }
+}
 
 
 void cast_all_rays(t_player *player)
 {
-    clear_screen(player); // Clear the screen before drawing
+    clear_screen(player);
+    draw_floor_and_ceiling(player);
 
-    float ray_angle = player->rotationAngle - (FOV_ANGLE / 2); // Start from the leftmost ray
+    float ray_angle = player->rotationAngle - (FOV_ANGLE / 2);
 
     for (int i = 0; i < NUM_RAYS; i++)
     {
-        player->rays[i].angle = ray_angle; // Store the angle of the current ray
-        cast_ray(player, &player->rays[i]); // Perform raycasting to find wall hit
-
-        // Render the corresponding 3D wall slice for this ray
+        player->rays[i].angle = ray_angle;
+        cast_ray(player, &player->rays[i]);
         if (player->rays[i].distance > 0)
         {
             render_3d_wall_slice(player, i, player->rays[i].distance);
         }
 
-        ray_angle += FOV_ANGLE / NUM_RAYS; // Increment angle based on the total number of rays
+        ray_angle += FOV_ANGLE / NUM_RAYS;
     }
 }
+
 
 int key_eshap(int keycode, t_player *player)
 {
@@ -291,6 +305,24 @@ int ft_read_map(char *file, t_player *player)
 
     close(fd);
     return 0;
+}
+void draw_floor_and_ceiling(t_player *player)
+{
+    int y;
+    for (y = 0; y < SH / 2; y++) // From top to middle
+    {
+        for (int x = 0; x < SW; x++)
+        {
+            put_pixel(player, x, y, CEILING_COLOR); // Fill the ceiling
+        }
+    }
+    for (y = SH / 2; y < SH; y++) // From middle to bottom
+    {
+        for (int x = 0; x < SW; x++)
+        {
+            put_pixel(player, x, y, FLOOR_COLOR); // Fill the floor
+        }
+    }
 }
 
 int main(int ac , char **av)
