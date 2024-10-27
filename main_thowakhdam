@@ -1,26 +1,13 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/27 13:37:10 by kahmada          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "cub3D.h"
-
 void init_player(t_player *p)
 {
-    p->x = SW / 2;
-    p->y = SH / 2;
+    p->x = (TILE_SIZE * 1.5); // Centered in the second tile (assuming first tile is empty)
+    p->y = (TILE_SIZE * 1.5); 
     p->radius = 3;
-    p->rotationAngle = M_PI / 2;
+    p->rotationAngle = M_PI / 2; // Facing down
     p->moveSpeed = 2.0;
-    p->rotationSpeed = 2 * (M_PI / 180);
+    p->rotationSpeed = 2 * (M_PI / 180); 
 }
+
 
 void clear_image(t_player *player)
 {
@@ -106,9 +93,10 @@ void cast_ray(t_player *player, t_ray *ray)
     {
         if (is_wall(xintercept, yintercept - (ray_dy > 0 ? 0 : 1), player))
         {
-            ray->horizontal_distance = sqrt((xintercept - player->x) * (xintercept - player->x) + (yintercept - player->y) * (yintercept - player->y));
+            ray->horizontal_distance = sqrt(pow(xintercept - player->x, 2) + pow(yintercept - player->y, 2));
             break;
         }
+        
         xintercept += xstep;
         yintercept += ystep;
     }
@@ -134,7 +122,9 @@ void cast_ray(t_player *player, t_ray *ray)
     }
 
     // Determine the shortest distance
+    // Choose the shortest distance (horizontal vs. vertical)
     ray->distance = fmin(ray->horizontal_distance, ray->vertical_distance);
+
 }
 void clear_screen(t_player *player)
 {
@@ -151,21 +141,27 @@ void clear_screen(t_player *player)
 
 void render_3d_wall_slice(t_player *player, int ray_id, float distance)
 {
-    float angle_diff = player->rays[ray_id].angle - player->rotationAngle;
-    float corrected_distance = distance * cos(angle_diff);
+    float corrected_distance = distance * cos(player->rays[ray_id].angle - player->rotationAngle);
     int wall_height = (TILE_SIZE * SH) / corrected_distance;
+
     int wall_top = (SH / 2) - (wall_height / 2);
     if (wall_top < 0) wall_top = 0;
 
     int wall_bottom = (SH / 2) + (wall_height / 2);
     if (wall_bottom >= SH) wall_bottom = SH - 1;
-    int x_pos = (SW / NUM_RAYS) * ray_id;
-    int color = 0xFF0000;
-    for (int y = wall_top; y <= wall_bottom; y++)
-    {
-        put_pixel(player, x_pos, y, color);
+
+    // Draw the wall slice, ensuring the width is correct
+    int x_start = (ray_id * (SW / NUM_RAYS));  // Start position for the slice
+    int x_end = x_start + (SW / NUM_RAYS);     // End position for the slice
+
+    for (int x = x_start; x < x_end; x++) {
+        for (int y = wall_top; y <= wall_bottom; y++) {
+            put_pixel(player, x, y, 0xFF0000);  // Fill pixel with red color
+        }
     }
 }
+
+
 
 
 void render_player(t_player *player)
@@ -195,23 +191,20 @@ void render_player(t_player *player)
 
 void cast_all_rays(t_player *player)
 {
-    clear_screen(player);
-    draw_floor_and_ceiling(player);
-
     float ray_angle = player->rotationAngle - (FOV_ANGLE / 2);
 
     for (int i = 0; i < NUM_RAYS; i++)
     {
         player->rays[i].angle = ray_angle;
-        cast_ray(player, &player->rays[i]);
-        if (player->rays[i].distance > 0)
-        {
-            render_3d_wall_slice(player, i, player->rays[i].distance);
-        }
+        cast_ray(player, &player->rays[i]);  // Cast the ray
 
-        ray_angle += FOV_ANGLE / NUM_RAYS;
+        render_3d_wall_slice(player, i, player->rays[i].distance);  // Render the slice
+
+        ray_angle += (FOV_ANGLE / NUM_RAYS);  // Increment the angle for the next ray
     }
 }
+
+
 
 
 int key_eshap(int keycode, t_player *player)
@@ -261,83 +254,102 @@ int close_window(t_player *player)
     return 0;
 }
 
-int ft_read_map(char *file, t_player *player)
-{
-    int fd;
-    char *line;
-    int i = 0;
+int handle_memory_error(char **map, int lines_allocated) {
+    for (int i = 0; i < lines_allocated; i++) {
+        free(map[i]);
+    }
+    free(map);
+    printf("Error allocating memory for map\n");
+    return -1;
+}
 
-    fd = open(file, O_RDONLY);
-    if (fd == -1)
-    {
-        printf("Error opening file\n");
-        return -1;
-    }
-    line = get_next_line(fd);
-    while (line)
-    {
-        if (line[0] == '1' || line[0] == ' ')
-            i++;
+int count_map_lines(int fd) {
+    char *line;
+    int lines = 0;
+
+    while ((line = get_next_line(fd))) {
+        if (line[0] == '1' || line[0] == ' ') {
+            lines++;
+        }
         free(line);
-        line = get_next_line(fd);
     }
-    player->map = malloc(sizeof(char *) * (i + 1));
-    if (!player->map)
-    {
-        close(fd);
+    return lines;
+}
+
+int allocate_map(char ***map, int lines) {
+    *map = malloc(sizeof(char *) * (lines + 1));
+    if (!*map) {
         printf("Error allocating memory for map\n");
         return -1;
     }
-    // lseek(fd, 0, SEEK_SET);
-    close(fd);
-    fd = open(file, O_RDONLY);
-    if (fd == -1)
-    {
-        printf("Error opening file\n");
-        return -1;
-    }
+    return 0;
+}
+
+int read_and_fill_map(int fd, char **map, t_player *player, int total_lines) {
+    char *line;
     int j = 0;
-    line = get_next_line(fd);
-    while (line && j < i) {
-        if (line[0] == '1' || line[0] == ' ')
-        {
-            player->map[j] = malloc(strlen(line) + 1);
-            if (!player->map[j])
-            {
-                for (int k = 0; k < j; k++)
-                    free(player->map[k]);
-                free(player->map);
-                close(fd);
-                printf("Error allocating memory for map line\n");
-                return -1;
+
+    while ((line = get_next_line(fd)) && j < total_lines) {
+        if (line[0] == '1' || line[0] == ' ') {
+            map[j] = malloc(strlen(line) + 1);
+            if (!map[j]) {
+                free(line);
+                return handle_memory_error(map, j);
             }
-            strcpy(player->map[j], line);
+            strcpy(map[j], line);
 
-            // Check for 'N' in the current line
-            char *n_pos = strchr(player->map[j], 'N');
+            // Suche nach 'N' und setze die Spielerposition
+            char *n_pos = strchr(map[j], 'N');
             if (n_pos) {
-                // Calculate player position in pixels based on 'N' location
-                int x_pos = n_pos - player->map[j]; // Column index of 'N'
-                int y_pos = j; // Row index of 'N'
-
-                // Set the player's position in the map
+                int x_pos = n_pos - map[j];
+                int y_pos = j;
                 player->x = (x_pos * TILE_SIZE) + (TILE_SIZE / 2);
                 player->y = (y_pos * TILE_SIZE) + (TILE_SIZE / 2);
-
-                // Replace 'N' with '0' so it's treated as an empty space
-                *n_pos = '0';
+                *n_pos = '0';  // Ersetze 'N' durch '0'
             }
-
             j++;
         }
         free(line);
-        line = get_next_line(fd);
     }
-    player->map[j] = NULL;
+    map[j] = NULL;  // Null-Terminierung der Map
+    return 0;
+}
+
+int ft_read_map(char *file, t_player *player) {
+    int fd = open(file, O_RDONLY);
+    if (fd == -1) {
+        printf("Error opening file\n");
+        return -1;
+    }
+
+    int total_lines = count_map_lines(fd);
+    close(fd);  // Datei schließen, bevor wir sie erneut öffnen
+
+    if (total_lines == 0) {
+        printf("No valid map data found\n");
+        return -1;
+    }
+
+    if (allocate_map(&player->map, total_lines) == -1) {
+        return -1;
+    }
+
+    fd = open(file, O_RDONLY);
+    if (fd == -1) {
+        printf("Error opening file\n");
+        free(player->map);
+        return -1;
+    }
+
+    if (read_and_fill_map(fd, player->map, player, total_lines) == -1) {
+        close(fd);
+        return -1;
+    }
 
     close(fd);
     return 0;
 }
+
 void draw_floor_and_ceiling(t_player *player)
 {
     int y;

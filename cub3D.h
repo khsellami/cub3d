@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/25 12:39:19 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/27 13:27:34 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,31 @@
 #include <mlx.h>
 #include <libc.h>
 #include <math.h>
+#define SW 800  // Screen width
+#define SH 600  // Screen height
+#define NUM_RAYS 800 // One ray per screen column (for simplicity)
+
 #define CEILING_COLOR 0xA0C8E0 // Example color for the ceiling (light blue)
 #define FLOOR_COLOR 0xA0A0A0 // Example color for the floor (gray)
 
-#define TILE_SIZE 50
+#define TILE_SIZE 32
 #define MAP_NUM_ROWS 14
 #define MAP_NUM_COLS 33
-#define SW 1650 
-#define SH 700
+
 #define FOV_ANGLE (60 * (M_PI / 180))  // Example: 60 degrees in radians
 
 #define WALL_STRIP_WIDTH 4
 // #define NUM_RAYS SW / WALL_STRIP_WIDTH
-#define NUM_RAYS 120
 typedef struct s_ray
 {
+    int horizontal_distance;
+    int vertical_distance;
     float distance; // Distance from the player to the wall hit
     float angle;    // The angle of the ray
 } t_ray;
 typedef struct s_player
 {
+    float angle;
     float x;
     float y;
     int radius;
