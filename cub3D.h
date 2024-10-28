@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/28 11:31:14 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:43:24 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,10 @@
 # define TILE_SIZE 32
 # define MAP_NUM_ROWS 14
 # define MAP_NUM_COLS 33
-# define FOV_ANGLE (60 * (M_PI / 180))
+#define FOV_ANGLE (M_PI / 3)
 # define WALL_STRIP_WIDTH 4
-# define NUM_RAYS SW / WALL_STRIP_WIDTH
+#define NUM_RAYS 800
+
 
 typedef struct s_ray
 {

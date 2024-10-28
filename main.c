@@ -3,14 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/28 12:27:05 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:07:08 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+void init_data(t_player *p)
+{
+    int i;
+
+    i = 0;
+    p->x = SW / 2;
+    p->y = SH / 2;
+    p->angle = 0;
+    p->radius = 3;
+    p->rotationAngle = M_PI / 2;
+    p->moveSpeed = 2.0;
+    p->rotationSpeed = 2 * (M_PI / 180);
+    p->mlx = NULL;
+    p->window = NULL;
+    p->img = NULL;
+    p->img_data = NULL;
+    p->bpp = 0;
+    p->line_length = 0;
+    p->endian = 0;
+    p->no = NULL;
+    p->so = NULL;
+    p->ea = NULL;
+    p->we = NULL;
+    p->floor_color = 0x000000;
+    p->ciel_color = 0xFFFFFF;
+    p->map = NULL;
+    while (i < NUM_RAYS)
+    {
+        p->rays[i].horizontal_distance = 0;
+        p->rays[i].vertical_distance = 0;
+        p->rays[i].distance = 0.0;
+        p->rays[i].angle = 0.0;
+        i++;
+    }
+}
 
 void clear_image(t_player *player)
 {
@@ -57,6 +92,7 @@ void draw_map(t_player *player) {
         }
     }
 }
+
 
 int is_wall(float x, float y, t_player *p)
 {
@@ -147,7 +183,8 @@ void render_3d_wall_slice(t_player *player, int ray_id, float distance)
 
     int wall_bottom = (SH / 2) + (wall_height / 2);
     if (wall_bottom >= SH) wall_bottom = SH - 1;
-    int x_pos = (SW / NUM_RAYS) * ray_id;
+    int x_pos = (ray_id * SW) / NUM_RAYS;
+
     int color = 0xFF0000;
     for (int y = wall_top; y <= wall_bottom; y++)
     {
@@ -183,17 +220,23 @@ void cast_all_rays(t_player *player)
 {
     clear_screen(player);
     draw_floor_and_ceiling(player);
+    
     float ray_angle = player->rotationAngle - (FOV_ANGLE / 2);
-
     for (int i = 0; i < NUM_RAYS; i++)
     {
         player->rays[i].angle = ray_angle;
         cast_ray(player, &player->rays[i]);
+        
         if (player->rays[i].distance > 0)
             render_3d_wall_slice(player, i, player->rays[i].distance);
+        else
+            printf("Ray %d has no valid distance.\n", i); // Debug print
+
         ray_angle += FOV_ANGLE / NUM_RAYS;
     }
 }
+
+
 
 int key_eshap(int keycode, t_player *player)
 {
@@ -250,7 +293,7 @@ void draw_floor_and_ceiling(t_player *player)
         for (int x = 0; x < SW; x++)
         {
             //hena diri player->ciel_color
-            put_pixel(player, x, y, CEILING_COLOR); // Fill the ceiling
+            put_pixel(player, x, y, player->ciel_color); // Fill the ceiling
         }
     }
     for (y = SH / 2; y < SH; y++) // From middle to bottom
@@ -258,7 +301,7 @@ void draw_floor_and_ceiling(t_player *player)
         for (int x = 0; x < SW; x++)
         {
             //hena diri floor_color
-            put_pixel(player, x, y, FLOOR_COLOR); // Fill the floor
+            put_pixel(player, x, y, player->floor_color); // Fill the floor
         }
     }
 }
@@ -276,27 +319,25 @@ int main(int ac , char **av)
         return (ft_putstr_fd("Error reading map\n", 2), 1);
     if (!valid_map(&p))
         return (write(2, "Invalid map\n", 12), 1);
+    printf("[%s]\n",p.no);
+    printf("[%s]\n",p.so);
+    printf("[%s]\n",p.ea);
+    printf("[%s]\n",p.we);
     p.mlx = mlx_init();
     if (!(p.mlx))
-        return (1);
+        return (0);
     p.window = mlx_new_window(p.mlx, SW, SH, "First Map");
     if (!(p.window))
-        return (1);
+        return (0);
     p.img = mlx_new_image(p.mlx, SW, SH);
-    if (!(p.img))
-        return (1);
     p.img_data = mlx_get_data_addr(p.img, &p.bpp, &p.line_length, &p.endian);
-    if (!(p.img_data))
-        return (1);
     clear_image(&p);
-    // draw_map(&p);
-    // draw_player(&p);
+    draw_map(&p);
+    draw_player(&p);
     cast_all_rays(&p);
-    // printf("color=%d\n",p.floor_color);
-    // printf("texture=%s\n", p.no);
     mlx_put_image_to_window(p.mlx, p.window, p.img, 0, 0);
-    // mlx_hook(p.window, 2, 0, (int (*)(int, void *))key_eshap, &p);
-    // mlx_hook(p.window, 17, 0, close_window, &p);
+    mlx_hook(p.window, 2, 0, (int (*)(int, void *))key_eshap, &p);
+    mlx_hook(p.window, 17, 0, close_window, &p);
     mlx_loop(p.mlx);
     return (0);
 }
