@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_map_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 11:22:30 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/28 11:24:42 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/10/28 20:44:12 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,15 @@ int parse_textures(char *line, char **texture_path)
     *texture_path = path;
     return (1);
 }
+void *ft_get_texture(t_player *player, char *path, int *width, int *height)
+{
+    void *img = mlx_xpm_file_to_image(player->mlx, path, width, height);
+    if (!img) {
+        printf("Failed to load texture: %s\n", path);
+        return NULL;
+    }
+    return img;
+}
 
 int parse_line(char *line, t_player *player)
 {
@@ -67,5 +76,5 @@ int parse_line(char *line, t_player *player)
         return (parse_textures(line + 3, &player->ea));
     else if (ft_strncmp(line, "WE ", 3) == 0)
         return (parse_textures(line + 3, &player->we));
-    return (0);
+    return (1);
 }
