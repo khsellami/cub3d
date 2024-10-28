@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/27 13:37:10 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/28 12:27:05 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
-
-void init_player(t_player *p)
-{
-    p->x = SW / 2;
-    p->y = SH / 2;
-    p->radius = 3;
-    p->rotationAngle = M_PI / 2;
-    p->moveSpeed = 2.0;
-    p->rotationSpeed = 2 * (M_PI / 180);
-}
 
 void clear_image(t_player *player)
 {
@@ -36,7 +26,6 @@ void put_pixel(t_player *player, int x, int y, int color)
         *(unsigned int *)dst = color;
     }
 }
-
 
 void draw_player(t_player *player)
 {
@@ -83,8 +72,6 @@ int is_wall(float x, float y, t_player *p)
     // printf("is_wall: Checking at x=%f, y=%f -> mapX=[%d], mapY=[%d]\n", x, y, mapX, mapY);
     return (p->map[mapY][mapX] == '1');
 }
-
-
 
 void cast_ray(t_player *player, t_ray *ray)
 {
@@ -136,6 +123,7 @@ void cast_ray(t_player *player, t_ray *ray)
     // Determine the shortest distance
     ray->distance = fmin(ray->horizontal_distance, ray->vertical_distance);
 }
+
 void clear_screen(t_player *player)
 {
     // Fill the image data with a solid color (e.g., black)
@@ -167,7 +155,6 @@ void render_3d_wall_slice(t_player *player, int ray_id, float distance)
     }
 }
 
-
 void render_player(t_player *player)
 {
     int player_x = (int)(player->x);
@@ -192,12 +179,10 @@ void render_player(t_player *player)
     }
 }
 
-
 void cast_all_rays(t_player *player)
 {
     clear_screen(player);
     draw_floor_and_ceiling(player);
-
     float ray_angle = player->rotationAngle - (FOV_ANGLE / 2);
 
     for (int i = 0; i < NUM_RAYS; i++)
@@ -205,14 +190,10 @@ void cast_all_rays(t_player *player)
         player->rays[i].angle = ray_angle;
         cast_ray(player, &player->rays[i]);
         if (player->rays[i].distance > 0)
-        {
             render_3d_wall_slice(player, i, player->rays[i].distance);
-        }
-
         ray_angle += FOV_ANGLE / NUM_RAYS;
     }
 }
-
 
 int key_eshap(int keycode, t_player *player)
 {
@@ -261,83 +242,6 @@ int close_window(t_player *player)
     return 0;
 }
 
-int ft_read_map(char *file, t_player *player)
-{
-    int fd;
-    char *line;
-    int i = 0;
-
-    fd = open(file, O_RDONLY);
-    if (fd == -1)
-    {
-        printf("Error opening file\n");
-        return -1;
-    }
-    line = get_next_line(fd);
-    while (line)
-    {
-        if (line[0] == '1' || line[0] == ' ')
-            i++;
-        free(line);
-        line = get_next_line(fd);
-    }
-    player->map = malloc(sizeof(char *) * (i + 1));
-    if (!player->map)
-    {
-        close(fd);
-        printf("Error allocating memory for map\n");
-        return -1;
-    }
-    // lseek(fd, 0, SEEK_SET);
-    close(fd);
-    fd = open(file, O_RDONLY);
-    if (fd == -1)
-    {
-        printf("Error opening file\n");
-        return -1;
-    }
-    int j = 0;
-    line = get_next_line(fd);
-    while (line && j < i) {
-        if (line[0] == '1' || line[0] == ' ')
-        {
-            player->map[j] = malloc(strlen(line) + 1);
-            if (!player->map[j])
-            {
-                for (int k = 0; k < j; k++)
-                    free(player->map[k]);
-                free(player->map);
-                close(fd);
-                printf("Error allocating memory for map line\n");
-                return -1;
-            }
-            strcpy(player->map[j], line);
-
-            // Check for 'N' in the current line
-            char *n_pos = strchr(player->map[j], 'N');
-            if (n_pos) {
-                // Calculate player position in pixels based on 'N' location
-                int x_pos = n_pos - player->map[j]; // Column index of 'N'
-                int y_pos = j; // Row index of 'N'
-
-                // Set the player's position in the map
-                player->x = (x_pos * TILE_SIZE) + (TILE_SIZE / 2);
-                player->y = (y_pos * TILE_SIZE) + (TILE_SIZE / 2);
-
-                // Replace 'N' with '0' so it's treated as an empty space
-                *n_pos = '0';
-            }
-
-            j++;
-        }
-        free(line);
-        line = get_next_line(fd);
-    }
-    player->map[j] = NULL;
-
-    close(fd);
-    return 0;
-}
 void draw_floor_and_ceiling(t_player *player)
 {
     int y;
@@ -345,6 +249,7 @@ void draw_floor_and_ceiling(t_player *player)
     {
         for (int x = 0; x < SW; x++)
         {
+            //hena diri player->ciel_color
             put_pixel(player, x, y, CEILING_COLOR); // Fill the ceiling
         }
     }
@@ -352,6 +257,7 @@ void draw_floor_and_ceiling(t_player *player)
     {
         for (int x = 0; x < SW; x++)
         {
+            //hena diri floor_color
             put_pixel(player, x, y, FLOOR_COLOR); // Fill the floor
         }
     }
@@ -359,31 +265,38 @@ void draw_floor_and_ceiling(t_player *player)
 
 int main(int ac , char **av)
 {
-    (void)ac;
     t_player p;
-    
-    init_player(&p);
+
+    if (ac != 2)
+        return (ft_putstr_fd("USGAE .cub3D <name_map.cub>", 2), 1);
+    if (checkfilename(av[1]) == -1)
+		return (ft_putstr_fd("Invalid extension file name\n", 2), 1);
+    init_data(&p);
     if (ft_read_map(av[1], &p) == -1)
-    {
-        printf("Error reading map\n");
-        return EXIT_FAILURE;
-    }
+        return (ft_putstr_fd("Error reading map\n", 2), 1);
+    if (!valid_map(&p))
+        return (write(2, "Invalid map\n", 12), 1);
     p.mlx = mlx_init();
     if (!(p.mlx))
-        return (0);
+        return (1);
     p.window = mlx_new_window(p.mlx, SW, SH, "First Map");
     if (!(p.window))
-        return (0);
-    
+        return (1);
     p.img = mlx_new_image(p.mlx, SW, SH);
+    if (!(p.img))
+        return (1);
     p.img_data = mlx_get_data_addr(p.img, &p.bpp, &p.line_length, &p.endian);
+    if (!(p.img_data))
+        return (1);
     clear_image(&p);
-    draw_map(&p);
-    draw_player(&p);
+    // draw_map(&p);
+    // draw_player(&p);
     cast_all_rays(&p);
+    // printf("color=%d\n",p.floor_color);
+    // printf("texture=%s\n", p.no);
     mlx_put_image_to_window(p.mlx, p.window, p.img, 0, 0);
-    mlx_hook(p.window, 2, 0, (int (*)(int, void *))key_eshap, &p);
-    mlx_hook(p.window, 17, 0, close_window, &p);
+    // mlx_hook(p.window, 2, 0, (int (*)(int, void *))key_eshap, &p);
+    // mlx_hook(p.window, 17, 0, close_window, &p);
     mlx_loop(p.mlx);
     return (0);
 }

@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:22:49 by kahmada           #+#    #+#             */
-/*   Updated: 2024/10/22 17:45:00 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/28 10:11:53 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D.h"
-size_t	ft_strlcpy(char *dst, char *src, size_t dstsize)
+
+int	ft_strlcpy(char *dst, char *src, int dstsize)
 {
-	size_t	src_len;
+	int	src_len;
 
 	src_len = ft_strlen(src);
 	if (src_len + 1 < dstsize)
@@ -25,9 +26,10 @@ size_t	ft_strlcpy(char *dst, char *src, size_t dstsize)
 	}
 	return (src_len);
 }
-static void	free_sp(char **str, size_t count)
+
+static void	free_sp(char **str, int count)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	while (str[i] && i < count)
@@ -35,10 +37,10 @@ static void	free_sp(char **str, size_t count)
 	free(str);
 }
 
-static	int	count_word(char const *s, char c)
+static	int	count_word(char  *s, char c)
 {
-	size_t	i;
-	size_t	count;
+	int	i;
+	int	count;
 
 	i = 0;
 	count = 0;
