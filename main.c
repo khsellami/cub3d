@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/28 22:23:17 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/28 22:41:56 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,67 +164,20 @@ void cast_ray(t_player *player, t_ray *ray) {
 
 void clear_screen(t_player *player)
 {
-    // Fill the image data with a solid color (e.g., black)
-    int color = 0x000000; // Background color (black)
+    int color = 0x000000;
     for (int y = 0; y < SH; y++)
     {
         for (int x = 0; x < SW; x++)
         {
-            put_pixel(player, x, y, color); // Fill every pixel with the background color
+            put_pixel(player, x, y, color);
         }
     }
 }
 
-// void render_3d_wall_slice(t_player *player, int ray_id, float distance)
-// {
-//     float angle_diff = player->rays[ray_id].angle - player->rotationAngle;
-//     float corrected_distance = distance * cos(angle_diff);
-//     int wall_height = (TILE_SIZE * SH) / corrected_distance;
-//     int wall_top = (SH / 2) - (wall_height / 2);
-//     if (wall_top < 0) wall_top = 0;
-
-//     int wall_bottom = (SH / 2) + (wall_height / 2);
-//     if (wall_bottom >= SH) wall_bottom = SH - 1;
-//     int x_pos = (ray_id * SW) / NUM_RAYS;
-
-//     // Choisir la texture en fonction du mur touché
-//     int texture_index = (player->rays[ray_id].vertical_distance < player->rays[ray_id].horizontal_distance) ?
-//                         (cos(player->rays[ray_id].angle) > 0 ? 2 : 3) : // Est ou Ouest
-//                         (sin(player->rays[ray_id].angle) > 0 ? 0 : 1);  // Nord ou Sud
-
-//     t_texture *texture = &player->textures[texture_index];
-
-//     // Calculer l'offset X dans la texture
-//     int texture_x = (int)(fmod(player->rays[ray_id].distance, TILE_SIZE) * texture->width / TILE_SIZE);
-//     if (texture_x < 0) texture_x = 0;
-
-//     // Afficher chaque pixel du mur avec la couleur correspondante de la texture
-//     for (int y = wall_top; y <= wall_bottom; y++)
-//     {
-//         int d = (y - wall_top) * texture->height / wall_height;
-//         int texture_y = d % texture->height;
-
-//         // Récupérer la couleur de la texture
-//         char *tex_data = get_texture_data(texture);
-//         if(!tex_data)
-//         {
-//             printf("Erreur: Impossible de récupérer les données de la texture\n");
-//             return;
-//         }
-//         if (!texture->img) {
-//     printf("Erreur: La texture %d n'est pas chargée correctement\n", texture_index);
-//     return;
-// }
-//         int color = *(unsigned int *)(tex_data + (texture_y * texture->line_length + texture_x * 4));
-
-//         // Dessiner le pixel
-//         put_pixel(player, x_pos, y, color);
-//     }
-// }
 void render_3d_wall_slice(t_player *player, int ray_id, float distance)
 {
     float angle_diff = player->rays[ray_id].angle - player->rotationAngle;
-    float corrected_distance = distance * cos(angle_diff);  // Fix fish-eye effect
+    float corrected_distance = distance * cos(angle_diff);
     int wall_height = (TILE_SIZE * SH) / corrected_distance;
     int wall_top = (SH / 2) - (wall_height / 2);
     
@@ -234,13 +187,9 @@ void render_3d_wall_slice(t_player *player, int ray_id, float distance)
     if (wall_bottom >= SH) wall_bottom = SH - 1;
     
     int x_pos = (ray_id * SW) / NUM_RAYS;
-
-    // Determine the correct texture based on wall hit (East, West, North, South)
     int texture_index = (player->rays[ray_id].vertical_distance < player->rays[ray_id].horizontal_distance) ?
-                        (cos(player->rays[ray_id].angle) > 0 ? 2 : 3) :  // East or West
-                        (sin(player->rays[ray_id].angle) > 0 ? 0 : 1);   // North or South
-
-    // Use the corresponding texture from the player struct
+                        (cos(player->rays[ray_id].angle) > 0 ? 2 : 3) :
+                        (sin(player->rays[ray_id].angle) > 0 ? 0 : 1);
     t_img *texture = NULL;
     if (texture_index == 0)
         texture = &player->no_img;
@@ -250,42 +199,29 @@ void render_3d_wall_slice(t_player *player, int ray_id, float distance)
         texture = &player->ea_img;
     else if (texture_index == 3)
         texture = &player->we_img;
-
     if (!texture || !texture->img) {
         printf("Erreur: La texture %d n'est pas chargée correctement\n", texture_index);
         return;
     }
-
-    // Calculate the X offset in the texture
     int texture_x = (int)(fmod(player->rays[ray_id].distance, TILE_SIZE) * texture->width / TILE_SIZE);
     if (texture_x < 0 || texture_x >= texture->width) {
         printf("Erreur: texture_x %d est hors limites\n", texture_x);
         return;
     }
-
-    // Render the wall slice
     for (int y = wall_top; y <= wall_bottom; y++)
     {
         int d = (y - wall_top) * texture->height / wall_height;
-        int texture_y = d % texture->height; // Ensure we stay within the texture bounds
-
+        int texture_y = d % texture->height;
         if (texture_y < 0 || texture_y >= texture->height) {
             printf("Erreur: texture_y %d est hors limites\n", texture_y);
             return;
         }
-
-        // Retrieve the color from the texture's pixel data
         int color = *(int *)(texture->data + (texture_y * texture->line_length + texture_x * (texture->bpp / 8)));
-
-        // Optional: Check if the pixel is "empty" (black, transparent) and replace it with a fallback color
         if (color == 0)
-            color = 0x00FF00;  // Replace black or transparent pixels with green, for example
-
-        // Draw the pixel on the screen
+            color = 0x00FF00;
         put_pixel(player, x_pos, y, color);
     }
 }
-
 
 void render_player(t_player *player)
 {
@@ -325,13 +261,10 @@ void cast_all_rays(t_player *player)
         if (player->rays[i].distance > 0)
             render_3d_wall_slice(player, i, player->rays[i].distance);
         else
-            printf("Ray %d has no valid distance.\n", i); // Debug print
-
+            printf("Ray %d has no valid distance.\n", i);
         ray_angle += FOV_ANGLE / NUM_RAYS;
     }
 }
-
-
 
 int key_eshap(int keycode, t_player *player)
 {
@@ -358,10 +291,10 @@ int key_eshap(int keycode, t_player *player)
         player->y = new_y;
     }
     clear_image(player);
-    draw_map(player); // Redraw the map onto the image
-    draw_player(player); // Draw the player onto the image
+    draw_map(player); 
+    draw_player(player);
     cast_all_rays(player);
-    mlx_put_image_to_window(player->mlx, player->window, player->img, 0, 0); // Display the image
+    mlx_put_image_to_window(player->mlx, player->window, player->img, 0, 0);
     return (0);
 }
 
@@ -383,25 +316,21 @@ int close_window(t_player *player)
 void draw_floor_and_ceiling(t_player *player)
 {
     int y;
-    for (y = 0; y < SH / 2; y++) // From top to middle
+    for (y = 0; y < SH / 2; y++)
     {
         for (int x = 0; x < SW; x++)
         {
-            //hena diri player->ciel_color
-            put_pixel(player, x, y, player->ciel_color); // Fill the ceiling
+            put_pixel(player, x, y, player->ciel_color);
         }
     }
-    for (y = SH / 2; y < SH; y++) // From middle to bottom
+    for (y = SH / 2; y < SH; y++)
     {
         for (int x = 0; x < SW; x++)
         {
-            //hena diri floor_color
-            put_pixel(player, x, y, player->floor_color); // Fill the floor
+            put_pixel(player, x, y, player->floor_color);
         }
     }
 }
-
-
 
 int get_pixel_color(void *img, int x, int y, t_player *p) 
 {
@@ -409,11 +338,6 @@ int get_pixel_color(void *img, int x, int y, t_player *p)
     return *(int*)(data + (y * p->line_length + x * (p->bpp / 8)));
 }
 
-// void *get_texture_data(t_texture *texture)
-// {
-//     int bpp, line_length, endian;
-//     return mlx_get_data_addr(texture->img, &bpp, &line_length, &endian);
-// }
 void *get_texture_data(t_texture *texture)
 {
     int bpp;
@@ -439,37 +363,36 @@ void init_player(t_player *player)
     }
 }
 
-int load_texture(t_player *player, char *path, t_img *texture) {
-    if (!player || !player->mlx || !texture || !path) {
+int load_texture(t_player *player, char *path, t_img *texture)
+{
+    if (!player || !player->mlx || !texture || !path)
+    {
         printf("Erreur: Paramètre(s) NULL détecté(s)\n");
         return 1;
     }
-
-    if (access(path, F_OK) == -1) {
+    if (access(path, F_OK) == -1)
+    {
         printf("Erreur: Le fichier %s n'existe pas.\n", path);
         return 1;
     }
-
     printf("Chargement de l'image depuis: %s\n", path);
     texture->img = mlx_xpm_file_to_image(player->mlx, path, &texture->width, &texture->height);
     if (!texture->img) {
         printf("Erreur: Impossible de charger l'image %s\n", path);
         return 1;
     }
-
     texture->data = mlx_get_data_addr(texture->img, &texture->bpp, &texture->line_length, &texture->endian);
-    if (!texture->data) {
+    if (!texture->data)
+    {
         printf("Erreur: Impossible de récupérer les données de l'image\n");
         return 1;
     }
-
     printf("Image chargée avec succès: %s\n", path);
     return 0;
 }
 
-
-
-void init_textures(t_player *player) {
+void init_textures(t_player *player)
+{
     if (load_texture(player, "./wall_north.xpm", &player->no_img) ||
         load_texture(player, "./wall_south.xpm", &player->so_img) ||
         load_texture(player, "./wall_east.xpm", &player->ea_img) ||
@@ -478,14 +401,14 @@ void init_textures(t_player *player) {
         exit(EXIT_FAILURE);
     }
 }
-void draw_wall(t_player *p, int x, int wall_height, int texture_index) {
+void draw_wall(t_player *p, int x, int wall_height, int texture_index)
+{
     int y;
     float wall_top = (SH / 2) - (wall_height / 2);
     float wall_bottom = (SH / 2) + (wall_height / 2);
 
     t_img *current_texture = NULL;
 
-    // Assign the correct texture based on index
     if (texture_index == 0)
         current_texture = &p->no_img;
     else if (texture_index == 1)
@@ -495,22 +418,18 @@ void draw_wall(t_player *p, int x, int wall_height, int texture_index) {
     else if (texture_index == 3)
         current_texture = &p->we_img;
 
-    if (!current_texture || !current_texture->img) {
+    if (!current_texture || !current_texture->img)
+    {
         printf("Erreur: Texture non chargée\n");
         return;
     }
-
-    for (y = wall_top; y < wall_bottom; y++) {
+    for (y = wall_top; y < wall_bottom; y++)
+    {
         if (y < 0 || y >= SH) continue;
-
         int tex_y = (y - wall_top) * current_texture->height / wall_height;
         int tex_x = x % current_texture->width;
-
-        // Retrieve the pixel color from the texture data
         int color = *(int *)(current_texture->data + 
                              (tex_y * current_texture->line_length + tex_x * (current_texture->bpp / 8)));
-
-        // Draw the pixel to the screen
         put_pixel(p, x, y, color);
     }
 }
@@ -524,15 +443,11 @@ int main(int ac, char **av)
         return (ft_putstr_fd("USAGE: .cub3D <name_map.cub>\n", 2), 1);
     if (checkfilename(av[1]) == -1)
         return (ft_putstr_fd("Invalid extension file name\n", 2), 1);
-    
     init_data(&p);
-    
     if (ft_read_map(av[1], &p) == -1)
         return (ft_putstr_fd("Error reading map\n", 2), 1);
-    
     if (!valid_map(&p))
         return (write(2, "Invalid map\n", 12), 1);
-    
     printf("[%s]\n", p.no);
     printf("[%s]\n", p.so);
     printf("[%s]\n", p.ea);
@@ -542,26 +457,19 @@ int main(int ac, char **av)
         printf("Erreur: Échec de l'initialisation de MiniLibX\n");
         return 1;
     }
-    // init_player(&p); // Appel à l'initialisation
-    init_textures(&p); // Appel à l'initialisation des textures
-
+    init_textures(&p);
     p.window = mlx_new_window(p.mlx, SW, SH, "First Map");
     if (!p.window)
         return (1);
-    
     p.img = mlx_new_image(p.mlx, SW, SH);
     p.img_data = mlx_get_data_addr(p.img, &p.bpp, &p.line_length, &p.endian);
-    
     clear_image(&p);
     draw_map(&p);
     draw_player(&p);
-    
     cast_all_rays(&p);
     mlx_put_image_to_window(p.mlx, p.window, p.img, 0, 0);
-    
     mlx_hook(p.window, 2, 0, (int (*)(int, void *))key_eshap, &p);
     mlx_hook(p.window, 17, 0, close_window, &p);
-    
     mlx_loop(p.mlx);
     return (0);
 }
