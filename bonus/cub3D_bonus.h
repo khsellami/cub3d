@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3D.h                                            :+:      :+:    :+:   */
+/*   cub3D_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/28 22:23:12 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/10/30 18:03:59 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D
-#define CUB3D
+#ifndef CUB3D_BONUS
+#define CUB3D_BONUS
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 6
@@ -22,8 +22,11 @@
 
 # define SW 800
 # define SH 600
-# define CEILING_COLOR 0xA0C8E0
-# define FLOOR_COLOR 0xA0A0A0
+#define MINIMAP_SIZE 300   // Size of the minimap in pixels
+#define MINIMAP_X 10  // Position X of the minimap
+#define MINIMAP_Y (10)  // Position Y of the minimap
+// # define CEILING_COLOR 0xA0C8E0
+// # define FLOOR_COLOR 0xA0A0A0
 # define TILE_SIZE 32
 # define MAP_NUM_ROWS 14
 # define MAP_NUM_COLS 33
@@ -77,6 +80,8 @@ typedef struct s_player
 	char *so;
 	char *ea;
 	char *we;
+	int map_width;  // Add this line
+    int map_height;
 	//add
 	 t_img no_img;  // North texture
     t_img so_img;  // South texture
@@ -94,6 +99,28 @@ typedef struct s_player
 	 t_texture textures[4];
 	t_ray rays[NUM_RAYS];
 } t_player;
+
+typedef struct s_data
+{
+    float angle_diff;
+    float corrected_distance;
+    int wall_height;
+    int wall_top;
+    int wall_bottom;
+    int x_pos;
+    int texture_index;
+    int texture_x;
+    int texture_y;
+	int x;
+    int y;
+    int px;
+    int py;
+	int color;
+    int tex_y;
+    int tex_x;
+	int y_offset;
+	int x_offset;
+} t_data;
 
 ////////LIBFT_FUNCTIONS////////
 int		ft_strlcpy(char *dst, char *src, int dstsize);
@@ -147,4 +174,19 @@ void draw_wall(t_player *p, int x, int wall_height, int texture_index);
 void *ft_get_texture(t_player *player, char *path, int *width, int *height);
 void init_textures(t_player *player);
 void *get_texture_data(t_texture *texture);
+void cast_all_rays(t_player *player);
+int close_window(t_player *player);
+int key_eshap(int keycode, t_player *player);
+void init_data(t_player *p);
+void render_3d_wall_slice(t_player *player, int ray_id, float distance);
+void draw_player(t_player *player);
+void draw_map(t_player *player);
+void draw_wall(t_player *p, int x, int wall_height, int texture_index);
+void render_player(t_player *player);
+void draw_floor_and_ceiling(t_player *player);
+void put_pixel(t_player *player, int x, int y, int color);
+int is_wall(float x, float y, t_player *p);
+void clear_screen(t_player *player);
+void clear_image(t_player *player);
+void draw_minimap(t_player *player);
 #endif
