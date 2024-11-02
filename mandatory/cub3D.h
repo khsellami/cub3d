@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/29 12:34:50 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/02 14:38:28 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define MAP_NUM_COLS 33
 #define FOV_ANGLE (M_PI / 3)
 # define WALL_STRIP_WIDTH 4
-#define NUM_RAYS 800
+#define NUM_RAYS 1000
 typedef struct s_img {
     void *img;
     int width;
@@ -49,8 +49,12 @@ typedef struct s_texture {
 } t_texture;
 typedef struct s_ray
 {
-	int horizontal_distance;
-	int vertical_distance;
+	double horz_x;
+    double horz_y;
+    double vert_x;
+    double vert_y;
+	double horizontal_distance;
+	double vertical_distance;
 	float distance;
 	float angle;
 } t_ray;
@@ -93,6 +97,7 @@ typedef struct s_player
     int width_ea, height_ea;
     int width_we, height_we;
 	t_img texture[4];
+	
 	//add
 	//colors
 	int floor_color;

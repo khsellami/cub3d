@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 11:30:13 by ksellami          #+#    #+#             */
-/*   Updated: 2024/10/29 11:20:30 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/02 14:32:24 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void init_data(t_player *p)
     p->y = SH / 2;
     p->angle = 0;
     p->radius = 3;
-    p->rotationAngle = M_PI / 2;
-    p->moveSpeed = 2.0;
+    p->rotationAngle = M_PI / 3;
+    p->moveSpeed = 25;
     p->rotationSpeed = 2 * (M_PI / 180);
     p->mlx = NULL;
     p->window = NULL;
