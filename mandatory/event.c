@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   event.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:30:19 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/01 16:13:47 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/02 14:50:38 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ void exit_game(t_player *player)
 
 int key_eshap(int keycode, t_player *player)
 {
-    float new_x = player->x;
-    float new_y = player->y;
-    float moveStep = player->moveSpeed;
-    float rotationStep = player->rotationSpeed;
+    double new_x = player->x;
+    double new_y = player->y;
+    double moveStep = player->moveSpeed;
+    double rotationStep = player->rotationSpeed;
 
     if (keycode == 123 || keycode == 0)
         player->rotationAngle -= rotationStep;

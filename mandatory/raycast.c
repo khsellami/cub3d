@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   raycast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:20:05 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/02 14:37:38 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/02 15:00:18 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 void horizontal_ray_intersection(t_player *player, t_ray *ray)
 {
-    float xintercept;
-    float yintercept;
-    float xstep;
-    float ystep;
+    double xintercept;
+    double yintercept;
+    double xstep;
+    double ystep;
 
     // Initialisation de xintercept et yintercept
     yintercept = floor(player->y / TILE_SIZE) * TILE_SIZE;
@@ -45,10 +45,10 @@ void horizontal_ray_intersection(t_player *player, t_ray *ray)
 
 void vertical_ray_intersection(t_player *player, t_ray *ray)
 {
-    float vert_x;
-    float vert_y;
-    float vert_dx;
-    float vert_dy;
+    double vert_x;
+    double vert_y;
+    double vert_dx;
+   double vert_dy;
 
     // Initialisation de vert_x et vert_y
     vert_x = floor(player->x / TILE_SIZE) * TILE_SIZE;
@@ -85,11 +85,11 @@ void cast_ray(t_player *player, t_ray *ray)
 
     // Correction de la distance pour l'angle
     ray->distance = fmin(ray->horizontal_distance, ray->vertical_distance);
-    ray->distance *= cos(ray->angle - player->rotationAngle);  // Correction de la perspective
+    // ray->distance *= cos(ray->angle - player->rotationAngle);  // Correction de la perspective
 }
 
 
-float normalize_angle(float angle)
+double normalize_angle(double angle)
 {
     angle = fmod(angle, 2 * M_PI);
     if (angle < 0)
@@ -99,7 +99,7 @@ float normalize_angle(float angle)
 
 void cast_all_rays(t_player *player)
 {
-    float ray_angle;
+    double ray_angle;
 
     clear_screen(player);
     draw_floor_and_ceiling(player);
@@ -114,11 +114,27 @@ void cast_all_rays(t_player *player)
     }
 }
 
-void calculate_wall_properties(t_player *player, int ray_id, float distance, t_data *data)
+// void calculate_wall_properties(t_player *player, int ray_id, double distance, t_data *data)
+// {
+//     data->angle_diff = player->rays[ray_id].angle - player->rotationAngle;
+//     data->corrected_distance = distance * cos(data->angle_diff);
+//     data->wall_height = (TILE_SIZE * SH) / data->corrected_distance;
+
+//     data->wall_top = (SH / 2) - (data->wall_height / 2);
+//     if (data->wall_top < 0) data->wall_top = 0;
+
+//     data->wall_bottom = (SH / 2) + (data->wall_height / 2);
+//     if (data->wall_bottom >= SH) data->wall_bottom = SH - 1;
+
+//     data->x_pos = (ray_id * SW) / NUM_RAYS;
+// }
+
+void calculate_wall_properties(t_player *player, int ray_id, double distance, t_data *data)
 {
     data->angle_diff = player->rays[ray_id].angle - player->rotationAngle;
     data->corrected_distance = distance * cos(data->angle_diff);
-    data->wall_height = (TILE_SIZE * SH) / data->corrected_distance;
+    double proj = (SW / 2) / tan(FOV_ANGLE / 2);
+    data->wall_height = (TILE_SIZE / data->corrected_distance) * proj;
 
     data->wall_top = (SH / 2) - (data->wall_height / 2);
     if (data->wall_top < 0) data->wall_top = 0;
@@ -126,8 +142,25 @@ void calculate_wall_properties(t_player *player, int ray_id, float distance, t_d
     data->wall_bottom = (SH / 2) + (data->wall_height / 2);
     if (data->wall_bottom >= SH) data->wall_bottom = SH - 1;
 
-    data->x_pos = (ray_id * SW) / NUM_RAYS;
+    data->x_pos = ray_id;
 }
+// void calculate_wall_properties(t_player *player, int ray_id, double distance, t_data *data)
+// {
+//     (void)player;
+// 	double proj;
+// 	double wall_stripe;
+// 	// 
+// 	proj = (SW / 2) / tan(FOV_ANGLE / 2);
+// 	wall_stripe = (TILE_SIZE / distance ) * proj;
+// 	data->wall_height = wall_stripe;
+// 	data->wall_top = (SH / 2) - (wall_stripe / 2);
+// 	if (data->wall_top < 0)
+// 		data->wall_top = 0;
+// 	data->wall_bottom = (SH / 2) + (wall_stripe / 2);
+// 	if (data->wall_bottom >= SH)
+// 		data->wall_bottom = SH - 1;
+// 	data->x_pos = ray_id;
+// }
 
 
 t_img *get_texture(t_player *player, int ray_id)
@@ -161,7 +194,7 @@ t_img *get_texture(t_player *player, int ray_id)
 
 int calculate_texture_x(t_player *player, int ray_id, t_img *texture)
 {
-    float wall_hit;
+    double wall_hit;
 
     if (player->rays[ray_id].vertical_distance < player->rays[ray_id].horizontal_distance) {
         // Vertical wall collision
@@ -197,7 +230,7 @@ void render_wall_slice(t_player *player, t_data *data, t_img *texture)
 }
 
 
-void render_3d_wall_slice(t_player *player, int ray_id, float distance)
+void render_3d_wall_slice(t_player *player, int ray_id, double distance)
 {
     t_data data;
     t_img *texture;

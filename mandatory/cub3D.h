@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/02 14:38:28 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/02 14:50:09 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ typedef struct s_ray
     double vert_y;
 	double horizontal_distance;
 	double vertical_distance;
-	float distance;
-	float angle;
+	double distance;
+	double angle;
 } t_ray;
 
 typedef struct s_player
@@ -67,12 +67,12 @@ typedef struct s_player
 	int move_up;
 	int move_down;
 //...
-	float angle;
-	float x;
-	float y;
+	double angle;
+	double x;
+	double y;
 	int radius;
 	double rotationAngle;
-	float moveSpeed;
+	double moveSpeed;
 	double rotationSpeed;
 	void *mlx;
 	void *window;
@@ -108,8 +108,8 @@ typedef struct s_player
 
 typedef struct s_data
 {
-    float angle_diff;
-    float corrected_distance;
+    double angle_diff;
+    double corrected_distance;
     int wall_height;
     int wall_top;
     int wall_bottom;
@@ -184,14 +184,14 @@ void cast_all_rays(t_player *player);
 int close_window(t_player *player);
 int key_eshap(int keycode, t_player *player);
 void init_data(t_player *p);
-void render_3d_wall_slice(t_player *player, int ray_id, float distance);
+void render_3d_wall_slice(t_player *player, int ray_id, double distance);
 void draw_player(t_player *player);
 void draw_map(t_player *player);
 void draw_wall(t_player *p, int x, int wall_height, int texture_index);
 void render_player(t_player *player);
 void draw_floor_and_ceiling(t_player *player);
 void put_pixel(t_player *player, int x, int y, int color);
-int is_wall(float x, float y, t_player *p);
+int is_wall(double x, double y, t_player *p);
 void clear_screen(t_player *player);
 void clear_image(t_player *player);
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/01 16:13:55 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/02 14:50:49 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void init_player(t_player *player)
         exit(EXIT_FAILURE);
     }
 }
-int is_wall(float x, float y, t_player *p)
+int is_wall(double x, double y, t_player *p)
 {
     int mapX = (int)(x / TILE_SIZE);
     int mapY = (int)(y / TILE_SIZE);

@@ -1,4 +1,4 @@
-void calculate_wall_properties(t_player *player, int ray_id, float distance, t_data *data)
+void calculate_wall_properties(t_player *player, int ray_id, double distance, t_data *data)
 {
     data->angle_diff = player->rays[ray_id].angle - player->rotationAngle;
     data->corrected_distance = distance * cos(data->angle_diff);

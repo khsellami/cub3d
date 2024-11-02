@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:25:38 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/02 13:51:31 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/02 14:51:46 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void put_pixel(t_player *player, int x, int y, int color)
     }
 }
 
-// void calculate_wall_properties(t_player *player, int ray_id, float distance, t_data *data)
+// void calculate_wall_properties(t_player *player, int ray_id,  distance, t_data *data)
 // {
 //     data->angle_diff = player->rays[ray_id].angle - player->rotationAngle;
 //     data->corrected_distance = distance * cos(data->angle_diff);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:28:18 by kahmada           #+#    #+#             */
-/*   Updated: 2024/10/29 12:36:46 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/02 14:51:58 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ void draw_map(t_player *player)
 void draw_wall(t_player *p, int x, int wall_height, int texture_index)
 {
     
-    float wall_top = (SH / 2) - (wall_height / 2);
-    float wall_bottom = (SH / 2) + (wall_height / 2);
+    double wall_top = (SH / 2) - (wall_height / 2);
+    double wall_bottom = (SH / 2) + (wall_height / 2);
     t_img *current_texture = NULL;
     t_data data;
     int color;
