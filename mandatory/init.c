@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 11:30:13 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/02 14:32:24 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/02 17:11:06 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ void init_data(t_player *p)
     p->so = NULL;
     p->ea = NULL;
     p->we = NULL;
-    p->floor_color = 0x8B4513;  // Erde (Braun)
+    // p->floor_color = 0x8B4513;  // Erde (Braun)
+    p->floor_color = 0x004C26;
     p->ciel_color = 0x87CEEB;   // Himmel (Hellblau)
 
     p->map = NULL;
