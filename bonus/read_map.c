@@ -6,11 +6,11 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 10:29:04 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 14:36:51 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/03 17:29:22 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3D_bonus.h"
 
 int ft_read_map(char *file, t_player *player)
 {

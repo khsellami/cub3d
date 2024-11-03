@@ -6,11 +6,11 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:20:05 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/03 17:30:37 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/03 17:30:23 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3D_bonus.h"
 void horizontal_ray_intersection(t_player *player, t_ray *ray)
 {
     double xintercept;
@@ -124,7 +124,7 @@ void calculate_wall_properties(t_player *player, int ray_id, double distance, t_
         return;
     }
     double proj = (SW / 2) / tan(FOV_ANGLE / 2);
-    data->wall_height = ((TILE_SIZE / data->corrected_distance) * proj);
+    data->wall_height =((TILE_SIZE / data->corrected_distance) * proj);
     if (data->wall_height < 0)
         data->wall_height = 0;
     data->wall_top = (SH / 2) - (data->wall_height / 2);

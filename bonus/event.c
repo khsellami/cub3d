@@ -6,11 +6,11 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:30:19 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/03 19:00:19 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/03 18:55:59 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3D_bonus.h"
 
 void exit_game(t_player *player)
 {
@@ -57,9 +57,12 @@ int key_eshap(int keycode, t_player *player)
         player->y = new_y;
     }
     clear_image(player);
-    // draw_map(player);
-    // draw_player(player);
+    draw_map(player);
+    draw_player(player);
     cast_all_rays(player);
+    
+    draw_mini_map(player);
+    
     mlx_put_image_to_window(player->mlx, player->window, player->img, 0, 0);
     return (0);
 }

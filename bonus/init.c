@@ -6,11 +6,11 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 11:30:13 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 15:06:11 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/03 18:25:39 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3D_bonus.h"
 
 void init_data(t_player *p)
 {
@@ -38,6 +38,11 @@ void init_data(t_player *p)
     // p->floor_color = 0x8B4513;  // Erde (Braun)
     p->floor_color = 0;
     p->ciel_color = 0;   // Himmel (Hellblau)
+    p->map_width = 10;
+    p->map_height = 10;
+    p->pos_x = p->map_width / 2;
+    p->pos_y = p->map_height / 2;
+    p->sprite_img.img = NULL;
 
     p->map = NULL;
     while (i < NUM_RAYS)

@@ -6,11 +6,11 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:28:18 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/03 18:00:42 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/03 18:59:54 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3D_bonus.h"
 
 // void draw_player(t_player *player)
 // {

@@ -6,11 +6,11 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 19:00:06 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/03 18:57:23 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "cub3D_bonus.h"
 
 void clear_image(t_player *player)
 {
@@ -56,6 +56,25 @@ int is_wall(double x, double y, t_player *p)
         return 1;
     return (p->map[mapY][mapX] == '1');
 }
+void draw_rectangle(t_img *img, int x, int y, int width, int height, int color)
+{
+    int i, j;
+    uint32_t *data;
+
+    // Ensure the rectangle is within the image bounds
+    if (x < 0 || y < 0 || x + width > img->width || y + height > img->height)
+        return;
+
+    data = (uint32_t *)img->data; // Assuming data is in a format compatible with uint32_t
+
+    for (j = 0; j < height; j++)
+    {
+        for (i = 0; i < width; i++)
+        {
+            data[(y + j) * img->line_length / 4 + (x + i)] = color; // Set the color
+        }
+    }
+}
 int main(int ac, char **av)
 {
     t_player p;
@@ -75,15 +94,18 @@ int main(int ac, char **av)
         return 1;
     }
     init_textures(&p);
+    init_player_sprite(&p); 
     p.window = mlx_new_window(p.mlx, SW, SH, "First Map");
     if (!p.window)
         return (1);
     p.img = mlx_new_image(p.mlx, SW, SH);
     p.img_data = mlx_get_data_addr(p.img, &p.bpp, &p.line_length, &p.endian);
     clear_image(&p);
-    // draw_map(&p);
-    // draw_player(&p);
-    cast_all_rays(&p);
+    draw_map(&p);
+     draw_mini_map(&p);
+     cast_all_rays(&p);
+   
+    draw_player(&p);
     mlx_put_image_to_window(p.mlx, p.window, p.img, 0, 0);
     mlx_hook(p.window, 2, 0, (int (*)(int, void *))key_eshap, &p);
     mlx_hook(p.window, 17, 0, close_window, &p);

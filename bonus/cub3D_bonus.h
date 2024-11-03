@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3D.h                                            :+:      :+:    :+:   */
+/*   cub3D_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 18:01:34 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/03 18:30:14 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,14 @@
 #define FOV_ANGLE (M_PI / 3)
 # define WALL_STRIP_WIDTH 4
 #define NUM_RAYS 1000
+#define MINI_MAP_SIZE 100 // Size of the mini-map (100x100 pixels)
+#define MINI_MAP_X 10     // X position on the main window
+#define MINI_MAP_Y 10     // Y position on the main window
+
 typedef struct s_img {
-    void *img;
     int width;
     int height;
+    void *img;
     char *data;
     int bpp;
     int line_length;
@@ -61,6 +65,11 @@ typedef struct s_ray
 
 typedef struct s_player
 {
+	t_img sprite_img;
+	double pos_x;          // Player's x position in the map
+    double pos_y;          // Player's y position in the map 
+    int map_width;         // Width of the map
+    int map_height;        // Height of the ma
 	//moves
 	int move_left ;
  	int move_right;
@@ -128,7 +137,6 @@ typedef struct s_data
 	int x_offset;
 } t_data;
 
-////////LIBFT_FUNCTIONS////////
 int		ft_strlcpy(char *dst, char *src, int dstsize);
 char	**ft_split(char *s, char c);
 long	ft_atoi(char *s);
@@ -193,5 +201,6 @@ void put_pixel(t_player *player, int x, int y, int color);
 int is_wall(double x, double y, t_player *p);
 void clear_screen(t_player *player);
 void clear_image(t_player *player);
+void draw_mini_map(t_player *player);
 void init_player_sprite(t_player *player);
 #endif
