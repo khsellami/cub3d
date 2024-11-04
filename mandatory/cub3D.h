@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 18:01:34 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/04 12:30:39 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <libc.h>
 # include <math.h>
 
-# define SW 800
+# define SW 1000
 # define SH 600
 // # define CEILING_COLOR 0xA0C8E0
 // # define FLOOR_COLOR 0xA0A0A0

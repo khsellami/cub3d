@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 17:34:13 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/03 17:45:05 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/03 21:43:29 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,33 +50,46 @@ void fill_circle(char *img_data, int center_x, int center_y, int radius, int col
     }
 }
 
-void draw_mini_map(t_player *player)
+void draw_minimap(t_player *player)
 {
-    int x, y;
-    int map_x, map_y;
-    int mini_map_scale = MINI_MAP_SIZE / player->map_width; // Adjust based on your map size
-    double player_x, player_y;
+    int color;
+    int i = 0;
+    int mini_map_scale = MINI_MAP_SIZE / player->map_width; // Scale for minimap
 
-    // Draw the mini-map background
-    fill_rectangle(player->img_data, MINI_MAP_X, MINI_MAP_Y, MINI_MAP_SIZE, MINI_MAP_SIZE, 0x000000); // Black background
+    // Clear the minimap background (black)
+    fill_rectangle(player->img_data, MINI_MAP_X, MINI_MAP_Y, MINI_MAP_SIZE, MINI_MAP_SIZE, 0x000000);
 
-    // Draw the map
-    for (y = 0; y < player->map_height; y++)
+    while (player->map[i])
     {
-        for (x = 0; x < player->map_width; x++)
+        int j = 0;
+        while (player->map[i][j])
         {
-            if (player->map[y][x] == '1') // Assuming '1' represents walls
+            // Set color based on map data
+            if (player->map[i][j] == '1') // Wall
+                color = 0xFFFFFF; // White for walls
+            else
+                color = 0x000000; // Black for empty spaces
+
+            // Calculate position on the minimap
+            int mini_map_x = MINI_MAP_X + (j * mini_map_scale);
+            int mini_map_y = MINI_MAP_Y + (i * mini_map_scale);
+
+            // Fill the tile on the minimap
+            for (int y_offset = 0; y_offset < mini_map_scale; y_offset++)
             {
-                // Calculate mini-map position
-                map_x = MINI_MAP_X + (x * mini_map_scale);
-                map_y = MINI_MAP_Y + (y * mini_map_scale);
-                fill_rectangle(player->img_data, map_x, map_y, mini_map_scale, mini_map_scale, 0xFFFFFF); // White wall
+                for (int x_offset = 0; x_offset < mini_map_scale; x_offset++)
+                {
+                    put_pixel(player, mini_map_x + x_offset, mini_map_y + y_offset, color);
+                }
             }
+            j++;
         }
+        i++;
     }
 
-    // Draw the player on the mini-map
-    player_x = MINI_MAP_X + (player->pos_x * mini_map_scale);
-    player_y = MINI_MAP_Y + (player->pos_y * mini_map_scale);
-    fill_circle(player->img_data, player_x, player_y, mini_map_scale / 4, 0xFF0000); // Red player
+    // Draw the player on the minimap
+    double player_x = MINI_MAP_X + (player->pos_x * mini_map_scale);
+    double player_y = MINI_MAP_Y + (player->pos_y * mini_map_scale);
+    fill_circle(player->img_data, player_x, player_y, mini_map_scale / 4, 0xFF0000); // Draw player in red
 }
+

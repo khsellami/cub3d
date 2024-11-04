@@ -6,30 +6,30 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:28:18 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/03 18:00:42 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/04 12:25:26 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-// void draw_player(t_player *player)
-// {
-//     int color = 0x00FF00;
-//     int x_center = player->x;
-//     int y_center = player->y;
-//     t_data data;
+void draw_player(t_player *player)
+{
+    int color = 0x00FF00;
+    int x_center = player->x;
+    int y_center = player->y;
+    t_data data;
 
-//     for (data.y = -player->radius; data.y <= player->radius; data.y++)
-//     {
-//         for (data.x = -player->radius; data.x <= player->radius; data.x++)
-//         {
-//             if (data.x * data.x + data.y * data.y <= player->radius * player->radius)
-//             {
-//                 put_pixel(player, x_center + data.x, y_center + data.y, color);
-//             }
-//         }
-//     }
-// }
+    for (data.y = -player->radius; data.y <= player->radius; data.y++)
+    {
+        for (data.x = -player->radius; data.x <= player->radius; data.x++)
+        {
+            if (data.x * data.x + data.y * data.y <= player->radius * player->radius)
+            {
+                put_pixel(player, x_center + data.x, y_center + data.y, color);
+            }
+        }
+    }
+}
 
 void draw_map(t_player *player)
 {

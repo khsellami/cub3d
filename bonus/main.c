@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 18:57:23 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/04 11:48:57 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,16 @@ int is_wall(double x, double y, t_player *p)
     int mapX = (int)(x / TILE_SIZE);
     int mapY = (int)(y / TILE_SIZE);
 
-    if (mapY < 0 || mapY >= MAP_NUM_ROWS || mapX < 0 || mapX >= MAP_NUM_COLS || 
-        p->map == NULL || p->map[mapY] == NULL || 
+    if (mapY < 0 || mapY >= MAP_NUM_ROWS || 
+        mapX < 0 || mapX >= MAP_NUM_COLS || 
+        p->map == NULL || 
+        p->map[mapY] == NULL || 
         mapX >= (int)strlen(p->map[mapY])) 
-        return 1;
-    return (p->map[mapY][mapX] == '1');
+    {
+        return 1; // Out of bounds or invalid map
+    }
+    
+    return (p->map[mapY][mapX] == '1'); // Check for wall
 }
 void draw_rectangle(t_img *img, int x, int y, int width, int height, int color)
 {
@@ -74,6 +79,15 @@ void draw_rectangle(t_img *img, int x, int y, int width, int height, int color)
             data[(y + j) * img->line_length / 4 + (x + i)] = color; // Set the color
         }
     }
+}
+
+void game_loop(t_player *player)
+{
+    clear_image(player);
+    draw_map(player);
+    cast_all_rays(player);
+    draw_minimap(player);
+    mlx_put_image_to_window(player->mlx, player->window, player->img, 0, 0);
 }
 int main(int ac, char **av)
 {
@@ -102,13 +116,13 @@ int main(int ac, char **av)
     p.img_data = mlx_get_data_addr(p.img, &p.bpp, &p.line_length, &p.endian);
     clear_image(&p);
     draw_map(&p);
-     draw_mini_map(&p);
-     cast_all_rays(&p);
-   
-    draw_player(&p);
+    draw_minimap(&p);
+    cast_all_rays(&p);
+    draw_pistol(&p);
     mlx_put_image_to_window(p.mlx, p.window, p.img, 0, 0);
     mlx_hook(p.window, 2, 0, (int (*)(int, void *))key_eshap, &p);
     mlx_hook(p.window, 17, 0, close_window, &p);
+    // mlx_loop_hook(p.mlx, (int (*)(void *))game_loop, &p);
     mlx_loop(p.mlx);
     return (0);
 }

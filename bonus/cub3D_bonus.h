@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 18:30:14 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/03 21:44:59 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,7 @@ void put_pixel(t_player *player, int x, int y, int color);
 int is_wall(double x, double y, t_player *p);
 void clear_screen(t_player *player);
 void clear_image(t_player *player);
-void draw_mini_map(t_player *player);
+void draw_minimap(t_player *player);
 void init_player_sprite(t_player *player);
+void draw_pistol(t_player *player);
 #endif

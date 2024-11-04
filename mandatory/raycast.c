@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 11:20:05 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/03 17:30:37 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/04 16:14:20 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ void cast_ray(t_player *player, t_ray *ray)
 
     // Correction de la distance pour l'angle
     ray->distance = fmin(ray->horizontal_distance, ray->vertical_distance);
+    
     // ray->distance *= cos(ray->angle - player->rotationAngle);  // Correction de la perspective
 }
 
@@ -120,17 +121,15 @@ void calculate_wall_properties(t_player *player, int ray_id, double distance, t_
     data->corrected_distance = distance * cos(data->angle_diff);
     if (data->corrected_distance <= 0)
     {
-        data->wall_height = 0;
-        return;
+        data->wall_height = 40;
+        // return;
     }
     double proj = (SW / 2) / tan(FOV_ANGLE / 2);
-    data->wall_height = ((TILE_SIZE / data->corrected_distance) * proj);
-    if (data->wall_height < 0)
-        data->wall_height = 0;
+    data->wall_height = (TILE_SIZE / data->corrected_distance) * proj;
     data->wall_top = (SH / 2) - (data->wall_height / 2);
-    if (data->wall_top < 0) data->wall_top = 0;
     data->wall_bottom = (SH / 2) + (data->wall_height / 2);
-    if (data->wall_bottom >= SH) data->wall_bottom = SH - 1;
+    if (data->wall_bottom >= SH) 
+        data->wall_bottom = SH - 1;
     data->x_pos = ray_id;
 }
 
@@ -182,6 +181,7 @@ void render_wall_slice(t_player *player, t_data *data, t_img *texture)
     if (data->wall_height <= 0) {
         printf("Erreur: wall_height %d est invalide\n", data->wall_height);
         return;
+        data->wall_height = 10;
     }
     if (texture->height <= 0) {
         printf("Erreur: texture height %d est invalide\n", texture->height);
