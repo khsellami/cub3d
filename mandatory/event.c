@@ -3,79 +3,86 @@
 /*                                                        :::      ::::::::   */
 /*   event.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 11:30:19 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/04 12:28:38 by kahmada          ###   ########.fr       */
+/*   Created: 2024/11/03 20:38:45 by ksellami          #+#    #+#             */
+/*   Updated: 2024/11/03 22:00:46 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-void exit_game(t_player *player)
+int	close_window(t_player *player)
 {
-    if (player->map)
-    {
-        for (int i = 0; player->map[i]; i++)
-        {
-            free(player->map[i]);
-        }
-        free(player->map);
-    }
-    mlx_destroy_window(player->mlx, player->window);
-    exit(0);
+	int	i;
+
+	i = 0;
+	if (player->map)
+	{
+		while (player->map[i])
+		{
+			free(player->map[i]);
+			i++;
+		}
+		free(player->map);
+	}
+	mlx_destroy_window(player->mlx, player->window);
+	exit(0);
+	return (0);
 }
 
-int key_eshap(int keycode, t_player *player)
+void	exit_game(t_player *player)
 {
-    double new_x = player->x;
-    double new_y = player->y;
-    double moveStep = player->moveSpeed;
-    double rotationStep = player->rotationSpeed;
+	int	i;
 
-    if (keycode == 123 || keycode == 0)
-        player->rotationAngle -= rotationStep;
-    else if (keycode == 124 || keycode == 2)
-        player->rotationAngle += rotationStep;
-    else if (keycode == 126 || keycode == 13)
-    {
-        new_x += cos(player->rotationAngle) * moveStep;
-        new_y += sin(player->rotationAngle) * moveStep;
-    }
-    else if (keycode == 125 || keycode == 1)
-    {
-        new_x -= cos(player->rotationAngle) * moveStep;
-        new_y -= sin(player->rotationAngle) * moveStep;
-    }
-    else if (keycode == 53)
-    {
-        exit_game(player);
-    }
-    if (!is_wall(new_x, new_y, player))
-    {
-        player->x = new_x;
-        player->y = new_y;
-    }
-    clear_image(player);
-    // draw_map(player);
-    // draw_player(player);
-    cast_all_rays(player);
-    mlx_put_image_to_window(player->mlx, player->window, player->img, 0, 0);
-    return (0);
+	if (player->map)
+	{
+		i = 0;
+		while (player->map[i])
+		{
+			free(player->map[i]);
+			i++;
+		}
+		free(player->map);
+	}
+	mlx_destroy_window(player->mlx, player->window);
+	exit(0);
 }
 
-
-int close_window(t_player *player)
+int	key_eshap(int keycode, t_player *player)
 {
-    if (player->map)
-    {
-        for (int i = 0; player->map[i]; i++)
-        {
-            free(player->map[i]);
-        }
-        free(player->map);
-    }
-    mlx_destroy_window(player->mlx, player->window);
-    exit(0);
-    return 0;
+	double	new_x;
+	double	new_y;
+	double	moveStep;
+	double	rotationStep;
+
+	new_x = player->x;
+	new_y = player->y;
+	moveStep = player->moveSpeed;
+	rotationStep = player->rotationSpeed;
+	if (keycode == 123 || keycode == 0)
+		player->rotationAngle -= rotationStep;
+	else if (keycode == 124 || keycode == 2)
+		player->rotationAngle += rotationStep;
+	else if (keycode == 126 || keycode == 13)
+	{
+		new_x += cos(player->rotationAngle) * moveStep;
+		new_y += sin(player->rotationAngle) * moveStep;
+	}
+	else if (keycode == 125 || keycode == 1)
+	{
+		new_x -= cos(player->rotationAngle) * moveStep;
+		new_y -= sin(player->rotationAngle) * moveStep;
+	}
+	else if (keycode == 53)
+		exit_game(player);
+	if (!is_wall(new_x, new_y, player))
+	{
+		player->x = new_x;
+		player->y = new_y;
+	}
+	clear_image(player);
+	cast_all_rays(player);
+	mlx_put_image_to_window(player->mlx, player->window, player->img, 0, 0);
+	return (0);
 }

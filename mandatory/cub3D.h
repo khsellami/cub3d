@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/19 17:22:22 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/04 12:30:39 by kahmada          ###   ########.fr       */
+/*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
+/*   Updated: 2024/11/03 21:05:41 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <libc.h>
 # include <math.h>
 
-# define SW 1000
+# define SW 800
 # define SH 600
 // # define CEILING_COLOR 0xA0C8E0
 // # define FLOOR_COLOR 0xA0A0A0
@@ -128,70 +128,71 @@ typedef struct s_data
 	int x_offset;
 } t_data;
 
-////////LIBFT_FUNCTIONS////////
-int		ft_strlcpy(char *dst, char *src, int dstsize);
-char	**ft_split(char *s, char c);
-long	ft_atoi(char *s);
-void	ft_putstr_fd(char *s, int fd);
+//GET NEXT LINE
+char	*get_next_line(int fd);
+
+//LIBFT
+char	*ft_strtrim(char *s1, char *set);
+int	ft_strncmp(char *s1, char *s2, int n);
+int	ft_strlen(char *str);
+char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strchr(char *string, int searchedChar);
 char	*ft_strdup(char *s1);
-char	*ft_strjoin(char *s1, char *s2);
-char	*ft_strtrim(char *s1, char *set);
 void	*ft_memcpy(void *dst, void *src, int n);
-int		ft_strlen(char *str);
-int		ft_strcmp(char *s1, char *s2);
-int		ft_strncmp(char *s1, char *s2, int n);
+void	ft_putstr_fd(char *s, int fd);
+int	ft_strcmp(char *s1, char *s2);
+char	**ft_split(char *s, char c);
 
-////////GET_NEXT_LINE////////
-char	*get_next_line(int fd);
-
-////////PARSING////////
-int		checkfilename(char *filename);
-int 	valid_map(t_player *p);
-int 	valid_char_map(char c);
-int 	not_mur_or_space(char c);
-int 	valid_space(t_player *p, int i, int j);
-int 	entoure_mur(t_player *p, int i, int j);
-
-////////READ MAP////////
-int 	ft_read_map(char *file, t_player *player);
-int 	is_valid_color(int color);
+//PARSING
+int	checkfilename(char *filename);
+void init(t_player *p);
+int valid_map(t_player *p);
+int valid_char_map(char c);
+int not_mur_or_space(char c);
+int valid_space(t_player *p, int i, int j);
+int entoure_mur(t_player *p, int i, int j);
+int parse_colors_textures(int ac, char **av, t_player *p);
+char *parse_texture(char *line);
+int is_valid_color(int color);
 int parse_color(char *line, int *color);
-void 	set_player_orientation(t_player *player, char orientation);
-int 	parse_textures(char *line, char **texture_path);
-int 	parse_line(char *line, t_player *player);
-
-////////UTILS////////
+int check_clr_txt(t_player *p);
+int check_one_player(t_player *p);
+void stocke_map_line(char *line, int size, t_player *p, int j);
+int just_spaces(char *s);
+int ft_parsing(int ac , char **av , t_player *p);
 int array_len(char **array);
 void free_array(char **array);
+void init_player(t_player *p, int x, int y, char direction);
 
-////////INIT////////
-void init_data(t_player *p);
-//
-void draw_floor_and_ceiling(t_player *player);
-char	*get_next_line(int fd);
-void updatePlayer(char direction);
-void readMapFromFile(const char *filename);
-int handle_input(int keycode);
-int load_textures(t_player *p);
-int get_pixel_color(void *img, int x, int y, t_player *p);
-void draw_wall(t_player *p, int x, int wall_height, int texture_index);
-void *ft_get_texture(t_player *player, char *path, int *width, int *height);
+
+//TEXTURES
 void init_textures(t_player *player);
-void *get_texture_data(t_texture *texture);
-void cast_all_rays(t_player *player);
-int close_window(t_player *player);
+int load_texture(t_player *player, char *path, t_img *texture);
+t_img *get_texture(t_player *player, int ray_id);
+int calculate_texture_x(t_player *player, int ray_id, t_img *texture);
+
+//EVENTS
 int key_eshap(int keycode, t_player *player);
-void init_data(t_player *p);
-void render_3d_wall_slice(t_player *player, int ray_id, double distance);
-void draw_player(t_player *player);
-void draw_map(t_player *player);
-void draw_wall(t_player *p, int x, int wall_height, int texture_index);
-void render_player(t_player *player);
-void draw_floor_and_ceiling(t_player *player);
-void put_pixel(t_player *player, int x, int y, int color);
+void exit_game(t_player *player);
+int close_window(t_player *player);
+
+//RAYCASTING
+void cast_all_rays(t_player *player);
 int is_wall(double x, double y, t_player *p);
-void clear_screen(t_player *player);
+double normalize_angle(double angle);
+void horizontal_ray_intersection(t_player *player, t_ray *ray);
+void vertical_ray_intersection(t_player *player, t_ray *ray);
+void cast_ray(t_player *player, t_ray *ray);
+
+//DRAW
+void draw_floor_and_ceiling(t_player *player);
+void render_3d_wall_slice(t_player *player, int ray_id, double distance);
+void render_wall_slice(t_player *player, t_data *data, t_img *texture);
+void calculate_wall_properties(t_player *player, int ray_id, double distance, t_data *data);
+
+//UTILS
 void clear_image(t_player *player);
-void init_player_sprite(t_player *player);
+void clear_screen(t_player *player);
+void put_pixel(t_player *player, int x, int y, int color);
+
 #endif

@@ -3,90 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/19 17:34:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/04 12:28:27 by kahmada          ###   ########.fr       */
+/*   Created: 2024/11/03 15:49:13 by ksellami          #+#    #+#             */
+/*   Updated: 2024/11/04 21:37:29 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-void clear_image(t_player *player)
-{
-    int img_size = SW * SH * 4;
-    memset(player->img_data, 0, img_size);
-}
-
-void clear_screen(t_player *player)
-{
-    int color = 0x000000;
-    for (int y = 0; y < SH; y++)
-    {
-        for (int x = 0; x < SW; x++)
-        {
-            put_pixel(player, x, y, color);
-        }
-    }
-}
-
-int get_pixel_color(void *img, int x, int y, t_player *p) 
-{
-    char *data = mlx_get_data_addr(img, &p->bpp, &p->line_length, &p->endian);
-    return *(int*)(data + (y * p->line_length + x * (p->bpp / 8)));
-}
-
-void init_player(t_player *player)
-{
-    player->mlx = mlx_init();
-    if (!player->mlx)
-    {
-        printf("Erreur: Échec de l'initialisation de MiniLibX\n");
-        exit(EXIT_FAILURE);
-    }
-}
-int is_wall(double x, double y, t_player *p)
-{
-    int mapX = (int)(x / TILE_SIZE);
-    int mapY = (int)(y / TILE_SIZE);
-
-    if (mapY < 0 || mapY >= MAP_NUM_ROWS || mapX < 0 || mapX >= MAP_NUM_COLS || 
-        p->map == NULL || p->map[mapY] == NULL || 
-        mapX >= (int)strlen(p->map[mapY])) 
-        return 1;
-    return (p->map[mapY][mapX] == '1');
-}
 int main(int ac, char **av)
 {
-    t_player p;
+	t_player	p;
 
-    if (ac != 2)
-        return (ft_putstr_fd("USAGE: .cub3D <name_map.cub>\n", 2), 1);
-    if (checkfilename(av[1]) == -1)
-        return (ft_putstr_fd("Invalid extension file name\n", 2), 1);
-    init_data(&p);
-    if (ft_read_map(av[1], &p) == -1)
-        return (ft_putstr_fd("Error reading map\n", 2), 1);
-    if (!valid_map(&p))
-        return (write(2, "Invalid map\n", 12), 1);
-    p.mlx = mlx_init();
-    if (!p.mlx) {
-        printf("Erreur: Échec de l'initialisation de MiniLibX\n");
-        return 1;
-    }
-    init_textures(&p);
-    p.window = mlx_new_window(p.mlx, SW, SH, "First Map");
-    if (!p.window)
-        return (1);
-    p.img = mlx_new_image(p.mlx, SW, SH);
-    p.img_data = mlx_get_data_addr(p.img, &p.bpp, &p.line_length, &p.endian);
-    clear_image(&p);
-    // draw_map(&p);
-    // draw_player(&p);
-    cast_all_rays(&p);
-    mlx_put_image_to_window(p.mlx, p.window, p.img, 0, 0);
-    mlx_hook(p.window, 2, 0, (int (*)(int, void *))key_eshap, &p);
-    mlx_hook(p.window, 17, 0, close_window, &p);
-    mlx_loop(p.mlx);
-    return (0);
+	if (ac != 2)
+		return (ft_putstr_fd("USAGE: .cub3D <name_map.cub>\n", 2), 1);
+	if (checkfilename(av[1]) == -1)
+		return (ft_putstr_fd("Invalid extension file name\n", 2), 1);
+	init(&p);
+	if (parse_colors_textures(ac , av , &p) == -1)
+		return (1);
+	if (check_clr_txt(&p))
+		return (ft_putstr_fd("No colors or textures\n", 2),1);
+	if (ft_parsing(ac , av, &p) == -1)
+		return (1);
+	if (check_one_player(&p) == -1)
+		return (1);
+	if (!valid_map(&p))
+		return (write(2, "Invalid map\n", 12), 1);
+	p.mlx = mlx_init();
+	if (!p.mlx)
+		return (1);
+	init_textures(&p);
+	p.window = mlx_new_window(p.mlx, SW, SH, "First Map");
+	if (!p.window)
+		return (1);
+	p.img = mlx_new_image(p.mlx, SW, SH);
+	p.img_data = mlx_get_data_addr(p.img, &p.bpp, &p.line_length, &p.endian);
+	clear_image(&p);
+	cast_all_rays(&p);
+	mlx_put_image_to_window(p.mlx, p.window, p.img, 0, 0);
+	mlx_hook(p.window, 2, 0, (int (*)(int, void *))key_eshap, &p);
+	mlx_hook(p.window, 17, 0, close_window, &p);
+	mlx_loop(p.mlx);
+	return (0);
 }

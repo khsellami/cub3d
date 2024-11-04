@@ -3,57 +3,81 @@
 /*                                                        :::      ::::::::   */
 /*   texture.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 11:23:35 by kahmada           #+#    #+#             */
-/*   Updated: 2024/10/29 11:24:32 by kahmada          ###   ########.fr       */
+/*   Created: 2024/11/03 20:33:24 by ksellami          #+#    #+#             */
+/*   Updated: 2024/11/03 22:20:51 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-void *get_texture_data(t_texture *texture)
+int	load_texture(t_player *player, char *path, t_img *texture)
 {
-    int bpp;
-    int line_length;
-    int endian;
-    void *addr;
-
-    addr = mlx_get_data_addr(texture, &bpp, &line_length, &endian);
-    if (!addr)
-    {
-        write(2, "Error getting image data\n", 25);
-        exit(1);
-    }
-    return addr;
+	if (!player || !player->mlx || !texture || !path)
+		return 1;
+	if (access(path, F_OK) == -1)
+	{
+		printf("Erreur: Le fichier %s n'existe pas.\n", path);
+		return (1);
+	}
+	texture->img = mlx_xpm_file_to_image(player->mlx, path, &texture->width, &texture->height);
+	if (!texture->img)
+		return (1);
+	texture->data = mlx_get_data_addr(texture->img, &texture->bpp, &texture->line_length, &texture->endian);
+	if (!texture->data)
+		return (1);
+	printf("Image texture  chargée avec succès: %s\n", path);
+	return (0);
 }
 
-int load_texture(t_player *player, char *path, t_img *texture)
+void	init_textures(t_player *player)
 {
-    if (!player || !player->mlx || !texture || !path)
-        return 1;
-    if (access(path, F_OK) == -1)
-    {
-        printf("Erreur: Le fichier %s n'existe pas.\n", path);
-        return 1;
-    }
-    texture->img = mlx_xpm_file_to_image(player->mlx, path, &texture->width, &texture->height);
-    if (!texture->img)
-        return 1;
-    texture->data = mlx_get_data_addr(texture->img, &texture->bpp, &texture->line_length, &texture->endian);
-    if (!texture->data)
-        return 1;
-    printf("Image texture  chargée avec succès: %s\n", path);
-    return 0;
+	if (load_texture(player, "./wall_north.xpm", &player->no_img) ||
+		load_texture(player, "./wall_south.xpm", &player->so_img) ||
+		load_texture(player, "./wall_east.xpm", &player->ea_img) ||
+		load_texture(player, "./wall_west.xpm", &player->we_img))
+		{
+		printf("Erreur: Échec du chargement des textures\n");
+		exit(EXIT_FAILURE);
+	}
 }
 
-void init_textures(t_player *player)
+t_img	*get_texture(t_player *player, int ray_id)
 {
-    if (load_texture(player, "./wall_north.xpm", &player->no_img) ||
-        load_texture(player, "./wall_south.xpm", &player->so_img) ||
-        load_texture(player, "./wall_east.xpm", &player->ea_img) ||
-        load_texture(player, "./wall_west.xpm", &player->we_img)) {
-        printf("Erreur: Échec du chargement des textures\n");
-        exit(EXIT_FAILURE);
-    }
+	int	texture_index;
+
+	if (player->rays[ray_id].vertical_distance < player->rays[ray_id].horizontal_distance)
+	{
+		if (cos(player->rays[ray_id].angle) > 0)
+			texture_index = 2;
+		else
+			texture_index = 3;
+	}
+	else
+	{
+		if (sin(player->rays[ray_id].angle) > 0)
+			texture_index = 0;
+		else
+			texture_index = 1;
+	}
+	if (texture_index == 0)
+		return (&player->no_img);
+	else if (texture_index == 1)
+		return (&player->so_img);
+	else if (texture_index == 2)
+		return (&player->ea_img);
+	else 
+		return (&player->we_img);
+}
+
+int	calculate_texture_x(t_player *player, int ray_id, t_img *texture)
+{
+	double	wall_hit;
+
+	if (player->rays[ray_id].vertical_distance < player->rays[ray_id].horizontal_distance)
+		wall_hit = fmod(player->rays[ray_id].vert_y, TILE_SIZE);
+	else
+		wall_hit = fmod(player->rays[ray_id].horz_x, TILE_SIZE);
+	return ((int)(wall_hit * texture->width / TILE_SIZE));
 }

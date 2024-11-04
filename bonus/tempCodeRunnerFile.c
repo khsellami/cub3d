@@ -1,1 +1,0 @@
-void draw_pistol(t_player *player)
