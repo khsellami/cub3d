@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cast_ray.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:52:40 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/04 21:23:32 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:14:33 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ void	vertical_ray_intersection(t_player *player, t_ray *ray)
 
 void	cast_ray(t_player *player, t_ray *ray)
 {
-	ray->horizontal_distance = INT_MAX;
-	ray->vertical_distance = INT_MAX;
+	ray->horizontal_distance = FLT_MAX;
+	ray->vertical_distance = FLT_MAX;
 	horizontal_ray_intersection(player, ray);
 	vertical_ray_intersection(player, ray);
 	if (ray->horizontal_distance < ray->vertical_distance)
@@ -113,3 +113,5 @@ void	cast_ray(t_player *player, t_ray *ray)
 	else
 		ray->distance = ray->vertical_distance;
 }
+
+

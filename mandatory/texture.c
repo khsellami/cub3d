@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   texture.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:33:24 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 22:20:51 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/05 15:25:53 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,20 @@ t_img	*get_texture(t_player *player, int ray_id)
 	else 
 		return (&player->we_img);
 }
-
 int	calculate_texture_x(t_player *player, int ray_id, t_img *texture)
 {
-	double	wall_hit;
-
-	if (player->rays[ray_id].vertical_distance < player->rays[ray_id].horizontal_distance)
-		wall_hit = fmod(player->rays[ray_id].vert_y, TILE_SIZE);
+	if(player->rays[ray_id].vertical_distance < player->rays[ray_id].horizontal_distance)
+		return ((int)fmod(player->rays[ray_id].vert_y, TILE_SIZE) * texture->width / TILE_SIZE);
 	else
-		wall_hit = fmod(player->rays[ray_id].horz_x, TILE_SIZE);
-	return ((int)(wall_hit * texture->width / TILE_SIZE));
+		return ((int)fmod(player->rays[ray_id].horz_x, TILE_SIZE) * texture->width / TILE_SIZE);
 }
+// int	calculate_texture_x(t_player *player, int ray_id, t_img *texture)
+// {
+// 	double	wall_hit;
+
+// 	if (player->rays[ray_id].vertical_distance < player->rays[ray_id].horizontal_distance)
+// 		wall_hit = fmod(player->rays[ray_id].vert_y, TILE_SIZE);
+// 	else
+// 		wall_hit = fmod(player->rays[ray_id].horz_x, TILE_SIZE);
+// 	return ((int)(wall_hit * texture->width / TILE_SIZE));
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 21:05:41 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:22:49 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@
 # include <mlx.h>
 # include <libc.h>
 # include <math.h>
+#include <float.h>
 
-# define SW 800
-# define SH 600
+
+# define SW 1050
+# define SH 650
 // # define CEILING_COLOR 0xA0C8E0
 // # define FLOOR_COLOR 0xA0A0A0
 # define TILE_SIZE 32
@@ -29,7 +31,7 @@
 # define MAP_NUM_COLS 33
 #define FOV_ANGLE (M_PI / 3)
 # define WALL_STRIP_WIDTH 4
-#define NUM_RAYS 1000
+#define NUM_RAYS SW
 typedef struct s_img {
     void *img;
     int width;
@@ -110,7 +112,7 @@ typedef struct s_data
 {
     double angle_diff;
     double corrected_distance;
-    int wall_height;
+    double wall_height;
     int wall_top;
     int wall_bottom;
     int x_pos;
