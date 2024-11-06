@@ -6,17 +6,17 @@
 /*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 16:13:20 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 18:01:41 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:19:07 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../cub3D.h"
 
 char	*ft_strtrim(char *s1, char *set)
 {
-	int	start;
-	int	end;
-	int	len;
+	int		start;
+	int		end;
+	int		len;
 	char	*trimmed;
 
 	start = 0;
@@ -106,70 +106,3 @@ char	*ft_strchr(char *string, int searchedChar)
 	}
 	return (NULL);
 }
-
-char	*ft_strdup(char *s1)
-{
-	char	*p;
-	int		l;
-	int		i;
-
-	i = 0;
-	l = ft_strlen(s1) + 1;
-	p = (char *) malloc (l);
-	if (!p)
-		return (NULL);
-	while (s1[i])
-	{
-		p[i] = s1[i];
-		i++;
-	}
-	p[i] = '\0';
-	return (p);
-}
-
-void	*ft_memcpy(void *dst, void *src, int n)
-{
-	unsigned char		*tmp_dst;
-	unsigned char	*tmp_src;
-
-	if (dst == NULL && src == NULL)
-		return (dst);
-	tmp_dst = (unsigned char *)dst;
-	tmp_src = (unsigned char *)src;
-	while (n > 0)
-	{
-		*(tmp_dst++) = *(tmp_src++);
-		n--;
-	}
-	return (dst);
-}
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	int	i;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		if (fd >= 0)
-		{
-			write (fd, &s[i], 1);
-			i++;
-		}
-	}
-}
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i] || s2[i])
-	{
-		if ((unsigned char)s1[i] != (unsigned char)s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		i++;
-	}
-	return (0);
-}
-

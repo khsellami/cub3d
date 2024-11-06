@@ -6,15 +6,15 @@
 /*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:05:18 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 22:20:58 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:34:50 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../cub3D.h"
 
-int array_len(char **array)
+int	array_len(char **array)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (array[len])
@@ -22,9 +22,9 @@ int array_len(char **array)
 	return (len);
 }
 
-void free_array(char **array)
+void	free_array(char **array)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!array)

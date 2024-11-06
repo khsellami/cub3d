@@ -3,14 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   cast_rays.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:41:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/05 16:14:37 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/06 17:19:43 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../cub3D.h"
+
+double	ft_dist(double x1, double y1, double x2, double y2)
+{
+	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
+}
+
+void	determine_ray_facing_direction(t_ray *ray)
+{
+	ray->israyfacingdown = ray->angle > 0 && ray->angle < M_PI;
+	ray->israyfacingup = !(ray->israyfacingdown);
+	ray->israyfacingright = ray->angle < 0.5 * M_PI || ray->angle > 1.5 * M_PI;
+	ray->israyfacingleft = !(ray->israyfacingright);
+}
 
 double	normalize_angle(double angle)
 {
@@ -22,18 +35,18 @@ double	normalize_angle(double angle)
 
 int	is_wall(double x, double y, t_player *p)
 {
-	int	mapX;
-	int	mapY;
-	if (x < 0 || x > SW || y < 0 || y > SH) {
-        return 1;
-    }
-	mapX = floor(x / TILE_SIZE);
-	mapY = floor(y / TILE_SIZE);
-	if (mapY < 0 || mapY >= MAP_NUM_ROWS || mapX < 0 \
-	|| mapX >= MAP_NUM_COLS || p->map == NULL \
-	|| p->map[mapY] == NULL || mapX >= ft_strlen(p->map[mapY])) 
+	int	mapx;
+	int	mapy;
+
+	if (x < 0 || x > SW || y < 0 || y > SH)
 		return (1);
-	return (p->map[mapY][mapX] != '0');
+	mapx = floor(x / TILE_SIZE);
+	mapy = floor(y / TILE_SIZE);
+	if (mapy < 0 || mapy >= MAP_NUM_ROWS || mapx < 0 \
+	|| mapx >= MAP_NUM_COLS || p->map == NULL \
+	|| p->map[mapy] == NULL || mapx >= ft_strlen(p->map[mapy]))
+		return (1);
+	return (p->map[mapy][mapx] != '0');
 }
 
 void	cast_all_rays(t_player *player)
@@ -43,7 +56,7 @@ void	cast_all_rays(t_player *player)
 
 	clear_screen(player);
 	draw_floor_and_ceiling(player);
-	ray_angle = player->rotationAngle - (FOV_ANGLE / 2);
+	ray_angle = player->rotationangle - (FOV_ANGLE / 2);
 	i = 0;
 	while (i < NUM_RAYS)
 	{

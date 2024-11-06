@@ -6,23 +6,23 @@
 /*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:36:58 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 22:03:06 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/06 17:08:04 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../cub3D.h"
 
 void	clear_image(t_player *player)
 {
-	int img_size;
+	int	img_size;
 
 	img_size = SW * SH * 4;
-	memset(player->img_data, 0, img_size);
+	ft_memset(player->img_data, 0, img_size);
 }
 
 void	clear_screen(t_player *player)
 {
-	int color;
+	int	color;
 	int	y;
 	int	x;
 
@@ -46,7 +46,8 @@ void	put_pixel(t_player *player, int x, int y, int color)
 
 	if (x >= 0 && x < SW && y >= 0 && y < SH)
 	{
-		dst = player->img_data + (y * player->line_length + x * (player->bpp / 8));
+		dst = player->img_data + \
+		(y * player->line_length + x * (player->bpp / 8));
 		*(unsigned int *)dst = color;
 	}
 }

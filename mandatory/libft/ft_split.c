@@ -6,11 +6,11 @@
 /*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 18:09:07 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/03 18:09:45 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/06 15:39:53 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
+#include "../cub3D.h"
 
 static int	ft_strlcpy(char *dst, char *src, int dstsize)
 {
@@ -37,7 +37,7 @@ static void	free_sp(char **str, int count)
 	free(str);
 }
 
-static	int	count_word(char  *s, char c)
+static int	count_word(char *s, char c)
 {
 	int	i;
 	int	count;
