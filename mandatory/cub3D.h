@@ -6,7 +6,7 @@
 /*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/06 17:42:18 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/09 18:11:31 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,8 @@ typedef struct s_player
 	int			ciel_color;
 	t_texture	textures[4];
 	t_ray		rays[NUM_RAYS];
+	int map_row;
+	int map_col;
 }	t_player;
 
 typedef struct s_data

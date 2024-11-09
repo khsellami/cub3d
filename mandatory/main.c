@@ -6,7 +6,7 @@
 /*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:13 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/06 18:03:01 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/09 18:13:44 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,21 @@ int	create_game(t_player *p)
 	return (0);
 }
 
+void	stock_dim_map(t_player *p)
+{
+	int	i = 0;
+	int	j = 0;
+
+	p->map_row = 0;
+	p->map_col = 0;
+	while (p->map[i])
+		i++;
+	if (p->map[0])
+		j = ft_strlen(p->map[0]);
+	p->map_row = i;
+	p->map_col = j;
+}
+
 int	main(int ac, char **av)
 {
 	t_player	p;
@@ -52,6 +67,7 @@ int	main(int ac, char **av)
 		return (1);
 	if (check_one_player(&p) == -1)
 		return (1);
+	stock_dim_map(&p);
 	if (!valid_map(&p))
 		return (1);
 	if (create_game(&p))

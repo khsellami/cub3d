@@ -6,7 +6,7 @@
 /*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:41:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/06 17:19:43 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/09 18:14:27 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int	is_wall(double x, double y, t_player *p)
 		return (1);
 	mapx = floor(x / TILE_SIZE);
 	mapy = floor(y / TILE_SIZE);
-	if (mapy < 0 || mapy >= MAP_NUM_ROWS || mapx < 0 \
-	|| mapx >= MAP_NUM_COLS || p->map == NULL \
+	if (mapy < 0 || mapy >= p->map_row || mapx < 0 \
+	|| mapx >= p->map_col || p->map == NULL \
 	|| p->map[mapy] == NULL || mapx >= ft_strlen(p->map[mapy]))
 		return (1);
 	return (p->map[mapy][mapx] != '0');
