@@ -2,8 +2,8 @@ NO ./wall_north.xpm
 SO ./wall_south.xpm
 EA ./wall_east.xpm
 WE ./wall_west.xpm
-F 0,0,139
-C 0,0,0
+F 169,169,169
+C 0,191,252
 
               
 
