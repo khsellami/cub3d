@@ -6,12 +6,15 @@
 #    By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/03 15:48:46 by ksellami          #+#    #+#              #
-#    Updated: 2024/11/09 21:02:46 by kahmada          ###   ########.fr        #
+#    Updated: 2024/11/10 09:16:23 by kahmada          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = cub3D_bonus
+BONUS_NAME = cub3D_bonus
+
 HEADER = cub3D_bonus.h
+BONUS_HEADER = cub3D_bonus.h
+
 FILES = parsing/parse_clrs_txt.c parsing/parse_clrs_txt_utils1.c parsing/check_file.c\
 parsing/ft_init.c parsing/parse_map.c parsing/parse_player.c parsing/valid_map.c\
 parsing/utils1.c \
@@ -26,22 +29,23 @@ minimap.c \
 sprite.c \
 mouse.c
 
-OBJS = ${FILES:%.c=%.o}
+BONUS_FILES = $(FILES)
+
+BONUS_OBJS = ${BONUS_FILES:%.c=%.o}
+
 CC = cc 
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 
-all: $(NAME)
+all: $(BONUS_NAME)
 
-$(NAME): $(OBJS) $(HEADER)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -lmlx -framework OpenGL -framework AppKit
+bonus: $(BONUS_NAME)
 
-%.o: %.c $(HEADER)
+$(BONUS_NAME): $(BONUS_OBJS) $(BONUS_HEADER)
+	$(CC) $(CFLAGS) $(BONUS_OBJS) -o $(BONUS_NAME) -lmlx -framework OpenGL -framework AppKit
+%.o: %.c $(HEADER) $(BONUS_HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
-
 clean:
-	rm -f ${OBJS} 
-
+	rm -f ${BONUS_OBJS}
 fclean: clean
-	rm -f ${NAME}
-	
+	rm -f ${BONUS_NAME}
 re: fclean all

@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 20:51:22 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/09 22:28:57 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/10 09:03:05 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,15 @@ void	init_player_sprite(t_player *player)
 	int		i;
 	char	*paths[NUM_FRAMES];
 
-	paths[0] = "./pis0.xpm";
-	paths[1] = "./pis1.xpm";
-	paths[2] = "./pis2.xpm";
-	paths[3] = "./pis3.xpm";
-	paths[4] = "./pis4.xpm";
-	paths[5] = "./pis5.xpm";
-	paths[6] = "./pis6.xpm";
-	paths[7] = "./pis7.xpm";
-	paths[8] = "./pis8.xpm";
+	paths[0] = "./sp/pis0.xpm";
+	paths[1] = "./sp/pis1.xpm";
+	paths[2] = "./sp/pis2.xpm";
+	paths[3] = "./sp/pis3.xpm";
+	paths[4] = "./sp/pis4.xpm";
+	paths[5] = "./sp/pis5.xpm";
+	paths[6] = "./sp/pis6.xpm";
+	paths[7] = "./sp/pis7.xpm";
+	paths[8] = "./sp/pis8.xpm";
 	i = 0;
 	while (i < NUM_FRAMES)
 	{

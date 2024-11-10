@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 20:58:14 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/09 22:00:47 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/10 08:52:51 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	draw_player(t_player *player)
 	int		y_center;
 	t_data	data;
 
-	color = 0x00FF00;
+	color = 0xFFFF00;
 	x_center = player->x / 5;
 	y_center = player->y / 5;
 	data.y = -player->radius;
@@ -43,7 +43,7 @@ void	draw_tile(t_player *player, int i, int j, char tile)
 	int		color;
 
 	if (tile == '1')
-		color = 0xFFFFFF;
+		color = 0x8B0000;
 	else
 		color = 0x000000;
 	data.y = i * TILE_SIZE / 5;

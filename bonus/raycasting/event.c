@@ -6,48 +6,11 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:38:45 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/09 22:32:04 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/10 08:47:48 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D_bonus.h"
-
-int	close_window(t_player *player)
-{
-	int	i;
-
-	i = 0;
-	if (player->map)
-	{
-		while (player->map[i])
-		{
-			free(player->map[i]);
-			i++;
-		}
-		free(player->map);
-	}
-	mlx_destroy_window(player->mlx, player->window);
-	exit(0);
-	return (0);
-}
-
-void	exit_game(t_player *player)
-{
-	int	i;
-
-	if (player->map)
-	{
-		i = 0;
-		while (player->map[i])
-		{
-			free(player->map[i]);
-			i++;
-		}
-		free(player->map);
-	}
-	mlx_destroy_window(player->mlx, player->window);
-	exit(0);
-}
 
 void	rotate_player(int keycode, t_player *player)
 {
@@ -60,22 +23,16 @@ void	rotate_player(int keycode, t_player *player)
 		player->rotationangle += rotationstep;
 }
 
-void	move_player(int keycode, t_player *player)
+void	handle_player_rotation_and_animation(int keycode, t_player *player)
 {
-	double	new_x;
-	double	new_y;
-	double	movestep;
 	double	rotationstep;
 
-	new_x = player->x;
-	new_y = player->y;
-	movestep = player->movespeed;
 	rotationstep = player->rotationspeed;
 	if (keycode == 12)
 		player->is_animating = 1;
-	if (keycode == 14)
+	else if (keycode == 14)
 		player->is_animating = 0;
-	if (keycode == 123)
+	else if (keycode == 123)
 	{
 		player->rotationangle -= rotationstep;
 		if (player->rotationangle < 0)
@@ -87,6 +44,17 @@ void	move_player(int keycode, t_player *player)
 		if (player->rotationangle >= 2 * M_PI)
 			player->rotationangle -= 2 * M_PI;
 	}
+}
+
+void	handle_player_movement(int keycode, t_player *player)
+{
+	double	new_x;
+	double	new_y;
+	double	movestep;
+
+	new_x = player->x;
+	new_y = player->y;
+	movestep = player->movespeed;
 	if (keycode == 126 || keycode == 13)
 	{
 		new_x += cos(player->rotationangle) * movestep;
@@ -102,6 +70,12 @@ void	move_player(int keycode, t_player *player)
 		player->x = new_x;
 		player->y = new_y;
 	}
+}
+
+void	move_player(int keycode, t_player *player)
+{
+	handle_player_rotation_and_animation(keycode, player);
+	handle_player_movement(keycode, player);
 }
 
 int	key_eshap(int keycode, t_player *player)
