@@ -3,14 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:13 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/09 18:13:44 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/13 19:56:30 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
+
+void set_player_direction(t_player *p, char direction)
+{
+    if (direction == 'N')
+        p->rotationangle = 3 * M_PI / 2;
+    else if (direction == 'S')
+        p->rotationangle = M_PI / 2;
+    else if (direction == 'E')
+        p->rotationangle = 0;
+    else if (direction == 'W')
+        p->rotationangle = M_PI;
+}
 
 int	create_game(t_player *p)
 {
@@ -54,22 +66,22 @@ int	main(int ac, char **av)
 	t_player	p;
 
 	if (ac != 2)
-		return (ft_putstr_fd("Nbr args invalide\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nNbr args invalide\n", 2), 1);
 	if (checkfilename(av[1]) == -1)
-		return (ft_putstr_fd("Extension must be .cub\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nExtension must be .cub\n", 2), 1);
 	if (init(&p) == -1)
-		return (ft_putstr_fd("Problem when initialize our data\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nProblem when initialize our data\n", 2), 1);
 	if (parse_colors_textures(av, &p) == -1)
-		return (ft_putstr_fd("Problem when stock colors and textures\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nProblem when stock colors and textures\n", 2), 1);
 	if (check_clr_txt(&p))
-		return (ft_putstr_fd("No textures provided\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nProblem in textures or colors\n", 2), 1);
 	if (ft_read_map(av, &p) == -1)
-		return (1);
+		return (ft_putstr_fd("ERROR\nread map\n", 2), 1);
 	if (check_one_player(&p) == -1)
-		return (1);
+		return (ft_putstr_fd("ERROR\nplayer\n", 2), 1);
 	stock_dim_map(&p);
 	if (!valid_map(&p))
-		return (1);
+		return (ft_putstr_fd("ERROR\nInvalid map\n", 2), 1);
 	if (create_game(&p))
 		return (1);
 	mlx_hook(p.window, 2, 0, key_eshap, &p);

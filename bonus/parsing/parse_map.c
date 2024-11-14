@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:02:49 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/08 18:19:15 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/13 18:22:31 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,7 @@ void	read_map_lines(int fd, int longest_line, t_player *p)
 		&& ft_strncmp(trimmed, "NO ", 3) != 0 \
 		&& ft_strncmp(trimmed, "SO ", 3) != 0 \
 		&& ft_strncmp(trimmed, "EA ", 3) != 0 \
-		&& ft_strncmp(trimmed, "WE ", 3) != 0 \
-		&& !just_spaces(trimmed))
+		&& ft_strncmp(trimmed, "WE ", 3) != 0)
 		{
 			stocke_map_line(line, longest_line, p, j);
 			j++;

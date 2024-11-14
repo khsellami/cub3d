@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+         #
+#    By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/03 15:48:46 by ksellami          #+#    #+#              #
-#    Updated: 2024/11/06 17:07:57 by ksellami         ###   ########.fr        #
+#    Updated: 2024/11/13 17:51:34 by kahmada          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ raycasting/draw.c
 
 OBJS = ${FILES:%.c=%.o}
 CC = cc 
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=address -g
 
 all: $(NAME)
 

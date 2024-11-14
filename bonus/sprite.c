@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 20:51:22 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/10 09:03:05 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/13 16:32:32 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	init_player_sprite(t_player *player)
 	{
 		if (load_sprite(player, paths[i], i) != 0)
 		{
-			printf("Erreur: Échec du chargement de l'image %s\n", paths[i]);
+			printf("ERROR: Échec du chargement de l'image %s\n", paths[i]);
 			exit(EXIT_FAILURE);
 		}
 		i++;

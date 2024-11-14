@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_clrs_txt.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:45:36 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/06 16:33:09 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/13 18:28:07 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,10 @@ void	parse_texture_line(char *trimmed, t_player *p)
 
 int	parse_color_line(char *trimmed, t_player *p)
 {
-	if (trimmed[0] == 'F')
+	// printf("trimmed = [%s]\n", trimmed);
+	if (trimmed[0] == 'F' && trimmed[1] == ' ' && p->floor_color == -1)
 		return (parse_color(trimmed + 2, &p->floor_color));
-	else if (trimmed[0] == 'C')
+	else if (trimmed[0] == 'C' && trimmed[1] == ' ' && p->ciel_color == -1) 
 		return (parse_color(trimmed + 2, &p->ciel_color));
 	return (0);
 }

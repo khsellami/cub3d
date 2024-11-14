@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:01:31 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/09 22:17:18 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/13 18:22:34 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int	check_one_player(t_player *p)
 	int	count;
 	int	i;
 	int	j;
+	int x_pos;
+	int y_pos;
 
 	count = 0;
 	i = 0;
@@ -45,6 +47,21 @@ int	check_one_player(t_player *p)
 		{
 			if (found_player(p->map[i][j]))
 			{
+				char *n_pos = ft_strchr(p->map[i], 'N');
+				char *s_pos = ft_strchr(p->map[i], 'S');
+				char *e_pos = ft_strchr(p->map[i], 'E');
+				char *w_pos = ft_strchr(p->map[i], 'W');
+				if (n_pos)
+					x_pos = n_pos - p->map[i];
+				if (s_pos)
+					x_pos = s_pos - p->map[i];
+				if (e_pos)
+					x_pos = e_pos - p->map[i];
+				if (w_pos)
+					x_pos = w_pos - p->map[i];
+				y_pos = j;
+				p->x = (x_pos * TILE_SIZE) + (TILE_SIZE / 2);
+				p->y = (y_pos * TILE_SIZE) + (TILE_SIZE / 2);
 				update_player(p, p->map[i][j]);
 				p->map[i][j] = '0';
 				count++;

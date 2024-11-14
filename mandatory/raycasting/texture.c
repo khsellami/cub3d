@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:33:24 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/09 19:11:27 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/13 19:49:26 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	load_texture(t_player *player, char *path, t_img *texture)
 	&texture->line_length, &texture->endian);
 	if (!texture->data)
 		return (1);
-	printf("Image texture  chargée avec succès: %s\n", path);
 	return (0);
 }
 
@@ -34,7 +33,10 @@ void	init_textures(t_player *player)
 	|| load_texture(player, player->so, &player->so_img) \
 	|| load_texture(player, player->ea, &player->ea_img) \
 	|| load_texture(player, player->we, &player->we_img))
-		exit(EXIT_FAILURE);
+    {
+        write(2, "Error\nTexture loading failed\n", 29);
+        exit(EXIT_FAILURE);
+    }
 }
 
 t_img *get_texture(t_player *player, int ray_id)
@@ -65,7 +67,6 @@ t_img *get_texture(t_player *player, int ray_id)
         return &player->we_img;
 }
 
-
 int calculate_texture_x(t_player *player, int ray_id, t_img *texture)
 {
     double wall_hit;
@@ -75,6 +76,5 @@ int calculate_texture_x(t_player *player, int ray_id, t_img *texture)
     } else {
         wall_hit = fmod(player->rays[ray_id].horz_x, TILE_SIZE);
     }
-
     return (int)(wall_hit * texture->width / TILE_SIZE);
 }

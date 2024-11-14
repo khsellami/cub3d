@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/09 22:26:00 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/13 15:07:49 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 # include <limits.h>
 # include <stdio.h> 
 # define BUFFER_SIZE 6
-# define SW 1050
-# define SH 650
+# define SW 1900
+# define SH 1000
 # define TILE_SIZE 32
 # define MAP_NUM_ROWS 14
 # define MAP_NUM_COLS 33

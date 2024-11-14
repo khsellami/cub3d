@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/09 18:11:31 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/13 17:23:46 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,10 @@
 # include <limits.h>
 # include <stdio.h>
 # define BUFFER_SIZE 6
-# define SW 1050
-# define SH 650
+# define SW 1900
+# define SH 1000
 # define TILE_SIZE 32
-# define MAP_NUM_ROWS 14
-# define MAP_NUM_COLS 33
 # define FOV_ANGLE (M_PI / 3)
-# define WALL_STRIP_WIDTH 4
 # define NUM_RAYS SW
 
 typedef struct s_img
@@ -121,6 +118,7 @@ typedef struct s_data
 	int		wall_top;
 	int		wall_bottom;
 	int		x_pos;
+	int		y_pos;
 	int		texture_index;
 	int		texture_x;
 	int		texture_y;
@@ -133,6 +131,11 @@ typedef struct s_data
 	int		tex_x;
 	int		y_offset;
 	int		x_offset;
+	char	*n_pos;
+	char	*s_pos;
+	char	*e_pos;
+	char	*w_pos;
+	int count;
 }	t_data;
 
 char	**ft_split(char *s, char c);
