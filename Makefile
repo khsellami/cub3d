@@ -6,7 +6,7 @@
 #    By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/16 18:59:05 by kahmada           #+#    #+#              #
-#    Updated: 2024/11/16 20:24:39 by kahmada          ###   ########.fr        #
+#    Updated: 2024/11/16 20:41:03 by kahmada          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,9 +62,9 @@ bonus/%.o: bonus/%.c bonus/cub3D_bonus.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean:
-	rm -f $(OBJ) $(B_OBJ) 
+	$(RM) $(OBJ) $(B_OBJ)
 
 fclean: clean
-	rm -f $(NAME) $(B_OBJ)
+	$(RM) $(NAME) $(BONUS_NAME)
 
 re: fclean all
