@@ -1,2 +1,0 @@
-texture fi form no 
-player oriente texture alphabet

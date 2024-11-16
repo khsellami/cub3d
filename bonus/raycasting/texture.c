@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:33:24 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/12 22:40:04 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 18:02:42 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	load_texture(t_player *player, char *path, t_img *texture)
 	&texture->line_length, &texture->endian);
 	if (!texture->data)
 		return (1);
-	printf("Image texture  chargée avec succès: %s\n", path);
 	return (0);
 }
 
@@ -34,7 +33,10 @@ void	init_textures(t_player *player)
 	|| load_texture(player, player->so, &player->so_img) \
 	|| load_texture(player, player->ea, &player->ea_img) \
 	|| load_texture(player, player->we, &player->we_img))
+	{
+		write(2, "Error\nTexture loading failed\n", 29);
 		exit(EXIT_FAILURE);
+	}
 }
 
 t_img	*get_texture(t_player *player, int ray_id)

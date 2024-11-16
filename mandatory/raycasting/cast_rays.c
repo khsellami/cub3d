@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cast_rays.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:41:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/09 18:14:27 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/16 17:33:56 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	cast_all_rays(t_player *player)
 	double	ray_angle;
 	int		i;
 
-	clear_screen(player);
 	draw_floor_and_ceiling(player);
 	ray_angle = player->rotationangle - (FOV_ANGLE / 2);
 	i = 0;

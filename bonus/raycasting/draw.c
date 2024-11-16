@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:42:37 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/07 14:01:17 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 16:20:17 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,17 @@ void	render_3d_wall_slice(t_player *player, int ray_id, double distance)
 	if (data.texture_x < 0 || data.texture_x >= texture->width)
 		return ;
 	render_wall_slice(player, &data, texture);
+}
+
+int	wall_collisions(t_player *data, int i, int j)
+{
+	int	x;
+	int	y;
+
+	x = (int)floor(j / TILE_SIZE);
+	y = (int)floor(i / TILE_SIZE);
+	if (data->map[x][(int)floor(data->x / TILE_SIZE)] == '1' && \
+	data->map[(int)floor(data->y / TILE_SIZE)][y] == '1')
+		return (0);
+	return (1);
 }

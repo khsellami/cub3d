@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:01:31 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/13 17:34:20 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 14:23:39 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ void	update_player_position(t_player *p, t_data *data, int i)
 
 int	check_one_player(t_player *p)
 {
-	t_data data;
-	int i;
-	int j;
+	t_data	data;
+	int		i;
+	int		j;
 
 	data.count = 0;
 	i = 0;
@@ -74,6 +74,6 @@ int	check_one_player(t_player *p)
 		i++;
 	}
 	if (data.count != 1)
-		return (ft_putstr_fd("nbr player = 1\n", 2), -1);
-	return 0;
+		return (ft_putstr_fd("ERROR\nnbr player = 1\n", 2), -1);
+	return (0);
 }

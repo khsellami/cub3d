@@ -1,4 +1,0 @@
-texture fi form no 
-player oriente texture alphabet
-pour C 0,191,252 il faut splite avec , et apres check chaque parti trim space and check if there every
-char is between 0 and 9 and afther that check if all number is between 0 and 255

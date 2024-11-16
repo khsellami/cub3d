@@ -6,22 +6,22 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:13 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/13 19:56:30 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 17:49:04 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-void set_player_direction(t_player *p, char direction)
+void	set_player_direction(t_player *p, char direction)
 {
-    if (direction == 'N')
-        p->rotationangle = 3 * M_PI / 2;
-    else if (direction == 'S')
-        p->rotationangle = M_PI / 2;
-    else if (direction == 'E')
-        p->rotationangle = 0;
-    else if (direction == 'W')
-        p->rotationangle = M_PI;
+	if (direction == 'N')
+		p->rotationangle = 3 * M_PI / 2;
+	else if (direction == 'S')
+		p->rotationangle = M_PI / 2;
+	else if (direction == 'E')
+		p->rotationangle = 0;
+	else if (direction == 'W')
+		p->rotationangle = M_PI;
 }
 
 int	create_game(t_player *p)
@@ -35,12 +35,18 @@ int	create_game(t_player *p)
 		return (1);
 	p->img = mlx_new_image(p->mlx, SW, SH);
 	if (!p->img)
+	{
+		mlx_destroy_window(p->mlx, p->window);
 		return (1);
+	}
 	p->img_data = mlx_get_data_addr(p->img, &p->bpp, \
 	&p->line_length, &p->endian);
 	if (!p->img_data)
+	{
+		mlx_destroy_image(p->mlx, p->img);
+		mlx_destroy_window(p->mlx, p->window);
 		return (1);
-	clear_image(p);
+	}
 	cast_all_rays(p);
 	mlx_put_image_to_window(p->mlx, p->window, p->img, 0, 0);
 	return (0);
@@ -48,9 +54,11 @@ int	create_game(t_player *p)
 
 void	stock_dim_map(t_player *p)
 {
-	int	i = 0;
-	int	j = 0;
+	int	i;
+	int	j;
 
+	i = 0;
+	j = 0;
 	p->map_row = 0;
 	p->map_col = 0;
 	while (p->map[i])
@@ -70,9 +78,9 @@ int	main(int ac, char **av)
 	if (checkfilename(av[1]) == -1)
 		return (ft_putstr_fd("ERROR\nExtension must be .cub\n", 2), 1);
 	if (init(&p) == -1)
-		return (ft_putstr_fd("ERROR\nProblem when initialize our data\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nProblem in init data\n", 2), 1);
 	if (parse_colors_textures(av, &p) == -1)
-		return (ft_putstr_fd("ERROR\nProblem when stock colors and textures\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nProblem in colors and textures\n", 2), 1);
 	if (check_clr_txt(&p))
 		return (ft_putstr_fd("ERROR\nProblem in textures or colors\n", 2), 1);
 	if (ft_read_map(av, &p) == -1)

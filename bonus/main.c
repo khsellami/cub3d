@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:13 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/09 21:57:00 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 17:51:59 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	loop_hook(t_player *player)
 {
-	clear_image(player);
 	cast_all_rays(player);
 	draw_pistol(player);
 	draw_map(player);
@@ -34,11 +33,19 @@ int	create_game(t_player *p)
 		return (1);
 	p->img = mlx_new_image(p->mlx, SW, SH);
 	if (!p->img)
+	{
+		mlx_destroy_window(p->mlx, p->window);
 		return (1);
+	}
 	p->img_data = mlx_get_data_addr(p->img, &p->bpp, \
 	&p->line_length, &p->endian);
 	if (!p->img_data)
+	{
+		mlx_destroy_image(p->mlx, p->img);
+		mlx_destroy_window(p->mlx, p->window);
 		return (1);
+	}
+	cast_all_rays(p);
 	mlx_put_image_to_window(p->mlx, p->window, p->img, 0, 0);
 	return (0);
 }
@@ -65,20 +72,20 @@ int	main(int ac, char **av)
 	t_player	p;
 
 	if (ac != 2)
-		return (ft_putstr_fd("Nbr args invalide\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nNbr args invalide\n", 2), 1);
 	if (checkfilename(av[1]) == -1)
-		return (ft_putstr_fd("Extension must be .cub\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nExtension must be .cub\n", 2), 1);
 	if (init(&p) == -1)
-		return (ft_putstr_fd("Problem when initialize our data\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nProblem in init data\n", 2), 1);
 	if (parse_colors_textures(av, &p) == -1)
-		return (ft_putstr_fd("Problem when stock colors and textures\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nProblem in colors and textures\n", 2), 1);
 	if (check_clr_txt(&p))
-		return (ft_putstr_fd("No textures provided\n", 2), 1);
+		return (ft_putstr_fd("ERROR\nProblem in textures or colors\n", 2), 1);
 	if (ft_read_map(av, &p) == -1 || check_one_player(&p) == -1)
-		return (1);
+		return (ft_putstr_fd("ERROR\nread map\n", 2), 1);
 	stock_dim_map(&p);
 	if (!valid_map(&p))
-		return (1);
+		return (ft_putstr_fd("ERROR\nInvalid map\n", 2), 1);
 	if (create_game(&p))
 		return (1);
 	mlx_loop_hook(p.mlx, loop_hook, &p);

@@ -6,24 +6,11 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:38:45 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/10 20:20:52 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 17:52:46 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D_bonus.h"
-
-int	wall_collisions(t_player *data,int i, int j)
-{
-	int	x;
-	int	y;
-
-	x = (int)floor(j / TILE_SIZE);
-	y = (int)floor(i / TILE_SIZE);
-	if (data->map[x][(int)floor(data->x / TILE_SIZE)] == '1' && \
-	data->map[(int)floor(data->y / TILE_SIZE)][y] == '1')
-		return (0);
-	return (1);
-}
 
 void	rotate_player(int keycode, t_player *player)
 {
@@ -78,7 +65,7 @@ void	handle_player_movement(int keycode, t_player *player)
 		new_x -= cos(player->rotationangle) * movestep;
 		new_y -= sin(player->rotationangle) * movestep;
 	}
-	if (!is_wall(new_x, new_y, player)  && wall_collisions(player, new_x, new_y))
+	if (!is_wall(new_x, new_y, player) && wall_collisions(player, new_x, new_y))
 	{
 		player->x = new_x;
 		player->y = new_y;
@@ -96,8 +83,7 @@ int	key_eshap(int keycode, t_player *player)
 	rotate_player(keycode, player);
 	move_player(keycode, player);
 	if (keycode == 53)
-		exit_game(player);
-	clear_image(player);
+		return (close_window(player));
 	cast_all_rays(player);
 	draw_pistol(player);
 	draw_map(player);

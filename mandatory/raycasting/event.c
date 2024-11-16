@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:38:45 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/13 17:52:58 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 17:38:22 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,6 @@ int	close_window(t_player *player)
 	mlx_destroy_window(player->mlx, player->window);
 	exit(0);
 	return (0);
-}
-
-void	exit_game(t_player *player)
-{
-	int	i;
-
-	if (player->map)
-	{
-		i = 0;
-		while (player->map[i])
-		{
-			free(player->map[i]);
-			i++;
-		}
-		free(player->map);
-	}
-	mlx_destroy_window(player->mlx, player->window);
-	exit(0);
 }
 
 void	rotate_player(int keycode, t_player *player)
@@ -91,8 +73,7 @@ int	key_eshap(int keycode, t_player *player)
 	rotate_player(keycode, player);
 	move_player(keycode, player);
 	if (keycode == 53)
-		exit_game(player);
-	clear_image(player);
+		return(close_window(player));
 	cast_all_rays(player);
 	mlx_put_image_to_window(player->mlx, player->window, player->img, 0, 0);
 	return (0);

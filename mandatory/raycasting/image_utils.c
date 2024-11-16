@@ -3,22 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   image_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:36:58 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/06 17:08:04 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/16 17:39:22 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D.h"
-
-void	clear_image(t_player *player)
-{
-	int	img_size;
-
-	img_size = SW * SH * 4;
-	ft_memset(player->img_data, 0, img_size);
-}
 
 void	clear_screen(t_player *player)
 {

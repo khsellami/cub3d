@@ -6,20 +6,44 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:47:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/07 14:00:31 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 16:14:18 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D_bonus.h"
 
-char	*parse_texture(char *line)
+int	check_comp(char **components)
 {
-	return (ft_strtrim(line, " \t\n"));
+	int		i;
+	char	*trimmed;
+
+	trimmed = NULL;
+	i = 0;
+	while (components[i])
+	{
+		trimmed = ft_strtrim(components[i], " \t\n");
+		if (!only_digits(trimmed))
+			return (free(trimmed), -1);
+		free(trimmed);
+		i++;
+	}
+	return (0);
 }
 
-int	is_valid_color(int color)
+int	nbr_virgules(char *s)
 {
-	return (color >= 0 && color <= 255);
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (s[i])
+	{
+		if (s[i] == ',')
+			count++;
+		i++;
+	}
+	return (count);
 }
 
 int	parse_color(char *line, int *color)
@@ -29,8 +53,12 @@ int	parse_color(char *line, int *color)
 	int		g;
 	int		b;
 
+	if (nbr_virgules(line) != 2)
+		return (-1);
 	components = ft_split(line, ',');
 	if (!components || array_len(components) != 3)
+		return (-1);
+	if (check_comp(components) == -1)
 		return (-1);
 	r = ft_atoi(components[0]);
 	g = ft_atoi(components[1]);

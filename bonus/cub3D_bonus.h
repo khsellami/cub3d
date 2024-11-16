@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/13 15:07:49 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 17:52:42 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ typedef struct s_data
 	int		wall_top;
 	int		wall_bottom;
 	int		x_pos;
+	int		y_pos;
 	int		texture_index;
 	int		texture_x;
 	int		texture_y;
@@ -153,6 +154,11 @@ typedef struct s_data
 	int		draw_x;
 	int		draw_y;
 	int		screen_y;
+	char	*n_pos;
+	char	*s_pos;
+	char	*e_pos;
+	char	*w_pos;
+	int		count;
 }	t_data;
 
 int		loop_hook(t_player *player);
@@ -176,7 +182,7 @@ char	*parse_texture(char *line);
 int		is_valid_color(int color);
 int		parse_color(char *line, int *color);
 int		check_clr_txt(t_player *p);
-void	parse_texture_line(char *trimmed, t_player *p);
+int		parse_texture_line(char *trimmed, t_player *p);
 int		parse_color_line(char *trimmed, t_player *p);
 int		parse_colors_textures(char **av, t_player *p);
 void	stocke_map_line(char *line, int size, t_player *p, int j);
@@ -216,7 +222,6 @@ void	exit_game(t_player *player);
 void	rotate_player(int keycode, t_player *player);
 void	move_player(int keycode, t_player *player);
 int		key_eshap(int keycode, t_player *player);
-void	clear_image(t_player *player);
 void	clear_screen(t_player *player);
 void	put_pixel(t_player *player, int x, int y, int color);
 int		load_texture(t_player *player, char *path, t_img *texture);
@@ -230,4 +235,6 @@ int		ft_atoi(char *str);
 void	draw_pistol(t_player *player);
 void	init_player_sprite(t_player *player);
 int		mouse_motion(int x, int y, t_player *player);
+int		only_digits(char *s);
+int		wall_collisions(t_player *data, int i, int j);
 #endif

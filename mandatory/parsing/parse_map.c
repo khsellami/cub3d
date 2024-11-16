@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:02:49 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/13 18:23:31 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 14:23:50 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	stocke_map_line(char *line, int size, t_player *p, int j)
 		map_content[i++] = ' ';
 	map_content[i] = '\0';
 	p->map[j] = malloc(size + 1);
-	// if (p->map[j])
 	ft_strcpy(p->map[j], map_content);
 	free(map_content);
 }

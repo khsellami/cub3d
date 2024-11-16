@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/13 17:23:46 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 16:10:17 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define SW 1900
 # define SH 1000
 # define TILE_SIZE 32
-# define FOV_ANGLE (M_PI / 3)
+# define FOV_ANGLE 1.04719755119659763132
 # define NUM_RAYS SW
 
 typedef struct s_img
@@ -106,8 +106,8 @@ typedef struct s_player
 	int			ciel_color;
 	t_texture	textures[4];
 	t_ray		rays[NUM_RAYS];
-	int map_row;
-	int map_col;
+	int			map_row;
+	int			map_col;
 }	t_player;
 
 typedef struct s_data
@@ -135,7 +135,7 @@ typedef struct s_data
 	char	*s_pos;
 	char	*e_pos;
 	char	*w_pos;
-	int count;
+	int		count;
 }	t_data;
 
 char	**ft_split(char *s, char c);
@@ -156,7 +156,7 @@ char	*parse_texture(char *line);
 int		is_valid_color(int color);
 int		parse_color(char *line, int *color);
 int		check_clr_txt(t_player *p);
-void	parse_texture_line(char *trimmed, t_player *p);
+int		parse_texture_line(char *trimmed, t_player *p);
 int		parse_color_line(char *trimmed, t_player *p);
 int		parse_colors_textures(char **av, t_player *p);
 void	stocke_map_line(char *line, int size, t_player *p, int j);
@@ -207,5 +207,8 @@ char	*get_next_line(int fd);
 char	*ft_strcpy(char *dest, char *src);
 void	*ft_memset(void *s, int c, int n);
 int		ft_atoi(char *str);
-
+int		valid_char_map(char c);
+int		not_mur_or_space(char c);
+int		valid_space(t_player *p, int i, int j);
+int		only_digits(char *s);
 #endif

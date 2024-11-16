@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/09 22:13:05 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/09 22:13:09 by kahmada          ###   ########.fr       */
+/*   Created: 2024/11/05 18:55:20 by ksellami          #+#    #+#             */
+/*   Updated: 2024/11/16 14:03:41 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	init_player(t_player *p)
 	p->x = SW / 2;
 	p->y = SH / 2;
 	p->angle = 0;
-	p->radius = 2;
 	p->rotationangle = M_PI / 3;
 	p->movespeed = 25;
 	p->rotationspeed = 2 * (M_PI / 180);

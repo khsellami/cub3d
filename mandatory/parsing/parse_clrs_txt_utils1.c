@@ -6,47 +6,46 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:47:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/13 18:33:43 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 14:27:23 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D.h"
 
-char	*parse_texture(char *line)
+int	check_comp(char **components)
 {
-	return (ft_strtrim(line, " \t\n"));
-}
+	int		i;
+	char	*trimmed;
 
-int	is_valid_color(int color)
-{
-	return (color >= 0 && color <= 255);
-}
-
-int ft_isdigit(int c)
-{
-	return (c >= '0' && c <= '9');
-}
-int check_comp(char **components)
-{
-	int	i;
-	int	j;
-
+	trimmed = NULL;
 	i = 0;
-
 	while (components[i])
 	{
-		components[i] = ft_strtrim(components[i], " \t"); // Apply strtrim to each component
-		j = 0;
-		while (components[i][j])
-		{
-			if (!ft_isdigit(components[i][j]))
-				return (-1);
-			j++;
-		}
+		trimmed = ft_strtrim(components[i], " \t\n");
+		if (!only_digits(trimmed))
+			return (free(trimmed), -1);
+		free(trimmed);
 		i++;
 	}
-	return (1);
+	return (0);
 }
+
+int	nbr_virgules(char *s)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (s[i])
+	{
+		if (s[i] == ',')
+			count++;
+		i++;
+	}
+	return (count);
+}
+
 int	parse_color(char *line, int *color)
 {
 	char	**components;
@@ -54,20 +53,16 @@ int	parse_color(char *line, int *color)
 	int		g;
 	int		b;
 
+	if (nbr_virgules(line) != 2)
+		return (-1);
 	components = ft_split(line, ',');
 	if (!components || array_len(components) != 3)
 		return (-1);
-	//pur chaque compenent trim it then check every number 0 ==>> 9
 	if (check_comp(components) == -1)
 		return (-1);
-	// printf("components[0] = [%s]\n", components[0]);
-	// exit(0);
 	r = ft_atoi(components[0]);
-	// printf("r = [%d]\n", r);
 	g = ft_atoi(components[1]);
-	// printf("g = [%d]\n", g);
 	b = ft_atoi(components[2]);
-	// printf("b = [%d]\n", b);
 	if (!is_valid_color(r) || !is_valid_color(g) || !is_valid_color(b))
 		return (-1);
 	*color = (r << 16) | (g << 8) | b;
