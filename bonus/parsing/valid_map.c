@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 18:26:24 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 16:13:34 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:54:44 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	invalid_text(char *s)
 	if (len < 4 || s[len - 1] != 'm' || s[len - 2] != 'p' \
 	|| s[len - 3] != 'x' || s[len - 4] != '.')
 	{
-		ft_putstr_fd("ERROR\n", 2);
+		ft_putstr_fd("ERROR\nInvalid texture extension\n", 2);
 		exit(1);
 	}
 	return (0);

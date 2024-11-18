@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 17:52:42 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:57:29 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@
 # define SW 1900
 # define SH 1000
 # define TILE_SIZE 32
-# define MAP_NUM_ROWS 14
-# define MAP_NUM_COLS 33
 # define FOV_ANGLE 1.04719755119659763132
 # define WALL_STRIP_WIDTH 4
 # define NUM_RAYS SW
@@ -218,7 +216,6 @@ double distance, t_data *data);
 void	render_wall_slice(t_player *player, t_data *data, t_img *texture);
 void	render_3d_wall_slice(t_player *player, int ray_id, double distance);
 int		close_window(t_player *player);
-void	exit_game(t_player *player);
 void	rotate_player(int keycode, t_player *player);
 void	move_player(int keycode, t_player *player);
 int		key_eshap(int keycode, t_player *player);
@@ -230,11 +227,11 @@ t_img	*get_texture(t_player *player, int ray_id);
 int		calculate_texture_x(t_player *player, int ray_id, t_img *texture);
 char	*get_next_line(int fd);
 char	*ft_strcpy(char *dest, char *src);
-void	*ft_memset(void *s, int c, int n);
 int		ft_atoi(char *str);
 void	draw_pistol(t_player *player);
 void	init_player_sprite(t_player *player);
 int		mouse_motion(int x, int y, t_player *player);
 int		only_digits(char *s);
 int		wall_collisions(t_player *data, int i, int j);
+int		is_texture_line(char *trimmed);
 #endif

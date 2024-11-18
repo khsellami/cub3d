@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 20:51:22 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/16 14:05:40 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/18 16:20:12 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	draw_pistol(t_player *player)
 
 	current_frame = &player->sprite_frames[player->current_frame];
 	d.draw_x = (SW / 2) - (current_frame->width);
-	d.draw_y = (SH * 0.5) - (current_frame->height);
+	d.draw_y = (SH / 2) - (current_frame->height);
 	d.y = 0;
 	while (d.y < current_frame->height)
 	{

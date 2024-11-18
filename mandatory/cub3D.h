@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 16:10:17 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:53:48 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,6 @@ int		parse_texture_line(char *trimmed, t_player *p);
 int		parse_color_line(char *trimmed, t_player *p);
 int		parse_colors_textures(char **av, t_player *p);
 void	stocke_map_line(char *line, int size, t_player *p, int j);
-int		just_spaces(char *s);
 int		count_map_lines(int fd, int *longest_line);
 void	read_map_lines(int fd, int longest_line, t_player *p);
 int		ft_read_map(char **av, t_player *p);
@@ -192,11 +191,9 @@ double distance, t_data *data);
 void	render_wall_slice(t_player *player, t_data *data, t_img *texture);
 void	render_3d_wall_slice(t_player *player, int ray_id, double distance);
 int		close_window(t_player *player);
-void	exit_game(t_player *player);
 void	rotate_player(int keycode, t_player *player);
 void	move_player(int keycode, t_player *player);
 int		key_eshap(int keycode, t_player *player);
-void	clear_image(t_player *player);
 void	clear_screen(t_player *player);
 void	put_pixel(t_player *player, int x, int y, int color);
 int		load_texture(t_player *player, char *path, t_img *texture);
@@ -205,10 +202,10 @@ t_img	*get_texture(t_player *player, int ray_id);
 int		calculate_texture_x(t_player *player, int ray_id, t_img *texture);
 char	*get_next_line(int fd);
 char	*ft_strcpy(char *dest, char *src);
-void	*ft_memset(void *s, int c, int n);
 int		ft_atoi(char *str);
 int		valid_char_map(char c);
 int		not_mur_or_space(char c);
 int		valid_space(t_player *p, int i, int j);
 int		only_digits(char *s);
+int		is_texture_line(char *trimmed);
 #endif

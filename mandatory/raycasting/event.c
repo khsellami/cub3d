@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:38:45 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 17:38:22 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:44:07 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	key_eshap(int keycode, t_player *player)
 	rotate_player(keycode, player);
 	move_player(keycode, player);
 	if (keycode == 53)
-		return(close_window(player));
+		return (close_window(player));
 	cast_all_rays(player);
 	mlx_put_image_to_window(player->mlx, player->window, player->img, 0, 0);
 	return (0);

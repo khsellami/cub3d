@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:47:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 16:14:18 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:41:33 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,10 @@ int	check_clr_txt(t_player *p)
 	|| p->ciel_color == -1)
 		return (1);
 	return (0);
+}
+
+int	is_texture_line(char *trimmed)
+{
+	return (!ft_strncmp(trimmed, "NO ", 3) || !ft_strncmp(trimmed, "SO ", 3) \
+	|| !ft_strncmp(trimmed, "EA ", 3) || !ft_strncmp(trimmed, "WE ", 3));
 }

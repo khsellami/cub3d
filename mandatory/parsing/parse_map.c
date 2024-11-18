@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:02:49 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 14:23:50 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/18 15:51:39 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,6 @@ void	stocke_map_line(char *line, int size, t_player *p, int j)
 	p->map[j] = malloc(size + 1);
 	ft_strcpy(p->map[j], map_content);
 	free(map_content);
-}
-
-int	just_spaces(char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i] && (s[i] == ' ' || s[i] == '\n'))
-		i++;
-	if (s[i] == '\0')
-		return (1);
-	return (0);
 }
 
 int	count_map_lines(int fd, int *longest_line)

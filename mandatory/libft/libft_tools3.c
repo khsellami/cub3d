@@ -3,27 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   libft_tools3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:06:44 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/06 18:01:44 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/18 11:44:07 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D.h"
-
-void	*ft_memset(void *s, int c, int n)
-{
-	unsigned char	*str;
-
-	str = (unsigned char *)s;
-	while (n > 0)
-	{
-		*(str++) = (unsigned char)c;
-		n--;
-	}
-	return (s);
-}
 
 int	ft_atoi(char *str)
 {

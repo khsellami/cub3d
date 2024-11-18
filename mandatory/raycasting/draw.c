@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:42:37 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 14:12:45 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/16 21:02:44 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ double distance, t_data *data)
 	data->angle_diff = player->rays[ray_id].angle - player->rotationangle;
 	data->corrected_distance = distance * cos(data->angle_diff);
 	if (data->corrected_distance <= 0)
-		data->wall_height = 40;
+		data->wall_height = 0;
 	proj = (SW / 2) / tan(FOV_ANGLE / 2);
 	data->wall_height = (TILE_SIZE / data->corrected_distance) * proj;
 	data->wall_top = (SH / 2) - (data->wall_height / 2);

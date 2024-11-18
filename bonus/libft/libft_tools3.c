@@ -6,26 +6,11 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 17:06:44 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/09 19:36:40 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/18 11:44:22 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D_bonus.h"
-
-void	*ft_memset(void *s, int c, int n)
-{
-	unsigned char	*str;
-
-	if (!s)
-		return (NULL);
-	str = (unsigned char *)s;
-	while (n > 0)
-	{
-		*(str++) = (unsigned char)c;
-		n--;
-	}
-	return (s);
-}
 
 int	ft_atoi(char *str)
 {

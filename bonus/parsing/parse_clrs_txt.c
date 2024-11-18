@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:45:36 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 16:12:13 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/18 16:07:40 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,26 @@ int	parse_color_line(char *trimmed, t_player *p)
 	return (0);
 }
 
-int	is_texture_line(char *trimmed)
+int	is_map_line(char *line)
 {
-	return (!ft_strncmp(trimmed, "NO ", 3) || !ft_strncmp(trimmed, "SO ", 3) \
-	|| !ft_strncmp(trimmed, "EA ", 3) || !ft_strncmp(trimmed, "WE ", 3));
+	return ((ft_strchr(line, '0') || \
+	ft_strchr(line, '1')) && !ft_strchr(line, ','));
+}
+
+int	process_trimmed_line(char *trimmed, t_player *p, int fd)
+{
+	if (trimmed && trimmed[0] && is_texture_line(trimmed))
+	{
+		if (parse_texture_line(trimmed, p) == -1)
+			return (free(trimmed), close(fd), -1);
+	}
+	if (trimmed && trimmed[0] && trimmed[1] \
+	&& (trimmed[0] == 'C' || trimmed[0] == 'F'))
+	{
+		if (parse_color_line(trimmed, p) == -1)
+			return (free(trimmed), close(fd), -1);
+	}
+	return (0);
 }
 
 int	parse_colors_textures(char **av, t_player *p)
@@ -76,25 +92,15 @@ int	parse_colors_textures(char **av, t_player *p)
 	line = get_next_line(fd);
 	while (line)
 	{
-		if ((ft_strchr(line, '0') || ft_strchr(line, '1')) \
-		&& !ft_strchr(line, ','))
+		if (is_map_line(line))
 		{
 			free(line);
 			break ;
 		}
 		trimmed = ft_strtrim(line, " \t");
 		free(line);
-		if (trimmed && trimmed[0] && is_texture_line(trimmed))
-		{
-			if (parse_texture_line(trimmed, p) == -1)
-				return (free(trimmed), close(fd), -1);
-		}
-		if (trimmed && trimmed[0] && trimmed[1] \
-		&& (trimmed[0] == 'C' || trimmed[0] == 'F'))
-		{
-			if (parse_color_line(trimmed, p) == -1)
-				return (free(trimmed), close(fd), -1);
-		}
+		if (process_trimmed_line(trimmed, p, fd) == -1)
+			return (-1);
 		free(trimmed);
 		line = get_next_line(fd);
 	}
