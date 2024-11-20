@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:45:36 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/18 16:07:40 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/20 17:32:53 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,9 @@ int	parse_colors_textures(char **av, t_player *p)
 			free(line);
 			break ;
 		}
-		trimmed = ft_strtrim(line, " \t");
+		if (space_line(line))
+			return (-1);
+		trimmed = ft_strtrim(line, " ");
 		free(line);
 		if (process_trimmed_line(trimmed, p, fd) == -1)
 			return (-1);

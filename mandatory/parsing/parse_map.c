@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:02:49 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/18 15:51:39 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/20 13:17:48 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	count_map_lines(int fd, int *longest_line)
 	line = get_next_line(fd);
 	while (line)
 	{
-		trimmed = ft_strtrim(line, " \t");
+		trimmed = ft_strtrim(line, " ");
 		if (ft_strncmp(trimmed, "F ", 2) && ft_strncmp(trimmed, "C ", 2) \
 		&& ft_strncmp(trimmed, "NO ", 3) && ft_strncmp(trimmed, "SO ", 3) \
 		&& ft_strncmp(trimmed, "EA ", 3) && ft_strncmp(trimmed, "WE ", 3))
@@ -71,7 +71,7 @@ void	read_map_lines(int fd, int longest_line, t_player *p)
 	line = get_next_line(fd);
 	while (line)
 	{
-		trimmed = ft_strtrim(line, " \t");
+		trimmed = ft_strtrim(line, " ");
 		if (trimmed[0] != 'F' && trimmed[0] != 'C' \
 		&& ft_strncmp(trimmed, "NO ", 3) != 0 \
 		&& ft_strncmp(trimmed, "SO ", 3) != 0 \

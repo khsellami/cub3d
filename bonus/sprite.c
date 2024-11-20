@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/09 20:51:22 by kahmada           #+#    #+#             */
-/*   Updated: 2024/11/18 16:20:12 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/20 19:19:03 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	load_sprite(t_player *player, char *path, int frame_index)
 	&player->sprite_frames[frame_index].height);
 	if (!player->sprite_frames[frame_index].img)
 	{
-		printf("Erreur: Échec du chargement de l'image du sprite %s\n", path);
+		write(2, "Error\nTexture sprite loading failed\n", 29);
 		return (1);
 	}
 	player->sprite_frames[frame_index].data = \
@@ -54,7 +54,7 @@ void	init_player_sprite(t_player *player)
 	{
 		if (load_sprite(player, paths[i], i) != 0)
 		{
-			printf("ERROR: Échec du chargement de l'image %s\n", paths[i]);
+			write(2, "Error\nTexture sprite loading failed\n", 29);
 			exit(EXIT_FAILURE);
 		}
 		i++;

@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:53:47 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 16:15:17 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/20 13:16:33 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,5 @@ int	valid_space(t_player *p, int i, int j)
 
 char	*parse_texture(char *line)
 {
-	return (ft_strtrim(line, " \t\n"));
+	return (ft_strtrim(line, " \n"));
 }

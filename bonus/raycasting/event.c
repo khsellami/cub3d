@@ -6,65 +6,51 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:38:45 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 17:52:46 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/20 17:29:15 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3D_bonus.h"
 
-void	rotate_player(int keycode, t_player *player)
+void	calcul_nw_p(int keycode, t_player *player, double *new_x, double *new_y)
 {
-	double	rotationstep;
+	double	movestep;
 
-	rotationstep = player->rotationspeed;
-	if (keycode == 123 || keycode == 0)
-		player->rotationangle -= rotationstep;
-	else if (keycode == 124 || keycode == 2)
-		player->rotationangle += rotationstep;
-}
-
-void	handle_player_rotation_and_animation(int keycode, t_player *player)
-{
-	double	rotationstep;
-
-	rotationstep = player->rotationspeed;
-	if (keycode == 12)
-		player->is_animating = 1;
-	else if (keycode == 14)
-		player->is_animating = 0;
-	else if (keycode == 123)
+	movestep = player->movespeed + 3;
+	if (keycode == 13)
 	{
-		player->rotationangle -= rotationstep;
-		if (player->rotationangle < 0)
-			player->rotationangle += 2 * M_PI;
+		*new_x += cos(player->rotationangle) * movestep;
+		*new_y += sin(player->rotationangle) * movestep;
 	}
-	else if (keycode == 124)
+	else if (keycode == 1)
 	{
-		player->rotationangle += rotationstep;
-		if (player->rotationangle >= 2 * M_PI)
-			player->rotationangle -= 2 * M_PI;
+		*new_x -= cos(player->rotationangle) * movestep;
+		*new_y -= sin(player->rotationangle) * movestep;
+	}
+	else if (keycode == 0)
+	{
+		*new_x += cos(player->rotationangle - M_PI_2) * movestep;
+		*new_y += sin(player->rotationangle - M_PI_2) * movestep;
+	}
+	else if (keycode == 2)
+	{
+		*new_x += cos(player->rotationangle + M_PI_2) * movestep;
+		*new_y += sin(player->rotationangle + M_PI_2) * movestep;
 	}
 }
 
-void	handle_player_movement(int keycode, t_player *player)
+void	move_player(int keycode, t_player *player)
 {
 	double	new_x;
 	double	new_y;
-	double	movestep;
 
 	new_x = player->x;
 	new_y = player->y;
-	movestep = player->movespeed;
-	if (keycode == 126 || keycode == 13)
-	{
-		new_x += cos(player->rotationangle) * movestep;
-		new_y += sin(player->rotationangle) * movestep;
-	}
-	else if (keycode == 125 || keycode == 1)
-	{
-		new_x -= cos(player->rotationangle) * movestep;
-		new_y -= sin(player->rotationangle) * movestep;
-	}
+	calcul_nw_p(keycode, player, &new_x, &new_y);
+	if (keycode == 123)
+		player->rotationangle -= player->rotationspeed;
+	else if (keycode == 124)
+		player->rotationangle += player->rotationspeed;
 	if (!is_wall(new_x, new_y, player) && wall_collisions(player, new_x, new_y))
 	{
 		player->x = new_x;
@@ -72,18 +58,16 @@ void	handle_player_movement(int keycode, t_player *player)
 	}
 }
 
-void	move_player(int keycode, t_player *player)
-{
-	handle_player_rotation_and_animation(keycode, player);
-	handle_player_movement(keycode, player);
-}
-
 int	key_eshap(int keycode, t_player *player)
 {
-	rotate_player(keycode, player);
 	move_player(keycode, player);
 	if (keycode == 53)
 		return (close_window(player));
+	if (keycode == 12)
+		player->is_animating = 1;
+	else if (keycode == 14)
+		player->is_animating = 0;
+	clear_screen(player);
 	cast_all_rays(player);
 	draw_pistol(player);
 	draw_map(player);

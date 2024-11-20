@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:38:45 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/18 15:44:07 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/20 17:13:14 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,36 +31,45 @@ int	close_window(t_player *player)
 	return (0);
 }
 
-void	rotate_player(int keycode, t_player *player)
+void	calcul_nw_p(int keycode, t_player *player, double *new_x, double *new_y)
 {
-	double	rotationstep;
+	double	movestep;
 
-	rotationstep = player->rotationspeed;
-	if (keycode == 123 || keycode == 0)
-		player->rotationangle -= rotationstep;
-	else if (keycode == 124 || keycode == 2)
-		player->rotationangle += rotationstep;
+	movestep = player->movespeed + 3;
+	if (keycode == 13)
+	{
+		*new_x += cos(player->rotationangle) * movestep;
+		*new_y += sin(player->rotationangle) * movestep;
+	}
+	else if (keycode == 1)
+	{
+		*new_x -= cos(player->rotationangle) * movestep;
+		*new_y -= sin(player->rotationangle) * movestep;
+	}
+	else if (keycode == 0)
+	{
+		*new_x += cos(player->rotationangle - M_PI_2) * movestep;
+		*new_y += sin(player->rotationangle - M_PI_2) * movestep;
+	}
+	else if (keycode == 2)
+	{
+		*new_x += cos(player->rotationangle + M_PI_2) * movestep;
+		*new_y += sin(player->rotationangle + M_PI_2) * movestep;
+	}
 }
 
 void	move_player(int keycode, t_player *player)
 {
 	double	new_x;
 	double	new_y;
-	double	movestep;
 
 	new_x = player->x;
 	new_y = player->y;
-	movestep = player->movespeed;
-	if (keycode == 126 || keycode == 13)
-	{
-		new_x += cos(player->rotationangle) * movestep;
-		new_y += sin(player->rotationangle) * movestep;
-	}
-	else if (keycode == 125 || keycode == 1)
-	{
-		new_x -= cos(player->rotationangle) * movestep;
-		new_y -= sin(player->rotationangle) * movestep;
-	}
+	calcul_nw_p(keycode, player, &new_x, &new_y);
+	if (keycode == 123)
+		player->rotationangle -= player->rotationspeed;
+	else if (keycode == 124)
+		player->rotationangle += player->rotationspeed;
 	if (!is_wall(new_x, new_y, player))
 	{
 		player->x = new_x;
@@ -70,10 +79,10 @@ void	move_player(int keycode, t_player *player)
 
 int	key_eshap(int keycode, t_player *player)
 {
-	rotate_player(keycode, player);
 	move_player(keycode, player);
 	if (keycode == 53)
 		return (close_window(player));
+	clear_screen(player);
 	cast_all_rays(player);
 	mlx_put_image_to_window(player->mlx, player->window, player->img, 0, 0);
 	return (0);

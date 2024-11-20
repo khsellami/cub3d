@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:47:26 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/18 15:42:36 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/20 13:17:35 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	check_comp(char **components)
 	i = 0;
 	while (components[i])
 	{
-		trimmed = ft_strtrim(components[i], " \t\n");
+		trimmed = ft_strtrim(components[i], " \n");
 		if (!only_digits(trimmed))
 			return (free(trimmed), -1);
 		free(trimmed);

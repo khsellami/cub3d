@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:01:31 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/18 15:55:36 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/19 16:01:41 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 void	update_player(t_player *p, char direction)
 {
 	if (direction == 'N')
-		p->rotationangle = M_PI / 2;
-	else if (direction == 'S')
 		p->rotationangle = 3 * M_PI / 2;
+	else if (direction == 'S')
+		p->rotationangle = M_PI / 2;
 	else if (direction == 'E')
 		p->rotationangle = 0;
 	else if (direction == 'W')

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_init.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:55:20 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/06 17:20:53 by ksellami         ###   ########.fr       */
+/*   Updated: 2024/11/20 19:12:05 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	init_player(t_player *p)
 	p->y = SH / 2;
 	p->angle = 0;
 	p->rotationangle = M_PI / 3;
-	p->movespeed = 25;
-	p->rotationspeed = 2 * (M_PI / 180);
+	p->movespeed = 10;
+	p->rotationspeed = 5 * (M_PI / 180);
 }
 
 void	init_rays(t_player *p)

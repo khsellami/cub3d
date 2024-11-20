@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:42:37 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 16:20:17 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/20 19:02:33 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,13 @@ double distance, t_data *data)
 	data->angle_diff = player->rays[ray_id].angle - player->rotationangle;
 	data->corrected_distance = distance * cos(data->angle_diff);
 	if (data->corrected_distance <= 0)
-		data->wall_height = 40;
+		data->wall_height = 0;
 	proj = (SW / 2) / tan(FOV_ANGLE / 2);
 	data->wall_height = (TILE_SIZE / data->corrected_distance) * proj;
 	data->wall_top = (SH / 2) - (data->wall_height / 2);
 	data->wall_bottom = (SH / 2) + (data->wall_height / 2);
 	if (data->wall_bottom >= SH)
-		data->wall_bottom = SH - 1;
+		data->wall_bottom = SH;
 	data->x_pos = ray_id;
 }
 
@@ -75,8 +75,6 @@ void	render_wall_slice(t_player *player, t_data *data, t_img *texture)
 		d = (y - data->wall_top) * texture->height / data->wall_height;
 		data->texture_y = d % texture->height;
 		if (data->texture_y < 0 || data->texture_y >= texture->height)
-			return ;
-		if (data->texture_x < 0 || data->texture_x >= texture->width)
 			return ;
 		color = *(int *)(texture->data + (data->texture_y * \
 		texture->line_length + data->texture_x * (texture->bpp / 8)));

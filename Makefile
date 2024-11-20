@@ -6,19 +6,19 @@
 #    By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/16 18:59:05 by kahmada           #+#    #+#              #
-#    Updated: 2024/11/16 21:55:55 by kahmada          ###   ########.fr        #
+#    Updated: 2024/11/20 17:33:41 by kahmada          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME       = cub3d
 BONUS_NAME = cub3D_bonus
 CC         = cc
-CFLAGS     = -Wall -Werror -Wextra
+CFLAGS     = -Wall -Werror -Wextra -g -fsanitize=address
 RM         = rm -f
 
 SRC = mandatory/parsing/parse_clrs_txt.c mandatory/parsing/parse_clrs_txt_utils1.c mandatory/parsing/check_file.c \
 mandatory/parsing/ft_init.c mandatory/parsing/parse_map.c mandatory/parsing/parse_player.c mandatory/parsing/valid_map.c \
-mandatory/parsing/utils1.c \
+mandatory/parsing/utils1.c mandatory/parsing/help.c\
 mandatory/main.c mandatory/get_next_line.c \
 mandatory/libft/libft_tools1.c mandatory/libft/libft_tools2.c mandatory/libft/libft_tools3.c \
 mandatory/libft/ft_split.c \
@@ -29,7 +29,7 @@ mandatory/raycasting/draw.c
 
 SRC_BONUS = bonus/parsing/parse_clrs_txt.c bonus/parsing/parse_clrs_txt_utils1.c bonus/parsing/check_file.c \
 bonus/parsing/ft_init.c bonus/parsing/parse_map.c bonus/parsing/parse_player.c bonus/parsing/valid_map.c \
-bonus/parsing/utils1.c \
+bonus/parsing/utils1.c mandatory/parsing/help.c\
 bonus/main.c bonus/get_next_line.c \
 bonus/libft/libft_tools1.c bonus/libft/libft_tools2.c bonus/libft/libft_tools3.c \
 bonus/libft/ft_split.c \

@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:13 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 17:49:04 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/20 13:20:28 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	create_game(t_player *p)
 		mlx_destroy_window(p->mlx, p->window);
 		return (1);
 	}
+	clear_screen(p);
 	cast_all_rays(p);
 	mlx_put_image_to_window(p->mlx, p->window, p->img, 0, 0);
 	return (0);

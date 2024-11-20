@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/18 15:53:48 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/20 19:17:25 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <unistd.h>
 # include <math.h>
 # include <limits.h>
-# include <stdio.h>
 # define BUFFER_SIZE 6
 # define SW 1900
 # define SH 1000
@@ -37,15 +36,6 @@ typedef struct s_img
 	int		line_length;
 	int		endian;
 }	t_img;
-
-typedef struct s_texture
-{
-	t_img	*img;
-	int		width;
-	int		height;
-	char	*data;
-	int		line_length;
-}	t_texture;
 
 typedef struct s_ray
 {
@@ -67,10 +57,6 @@ typedef struct s_ray
 
 typedef struct s_player
 {
-	int			move_left;
-	int			move_right;
-	int			move_up;
-	int			move_down;
 	double		angle;
 	double		x;
 	double		y;
@@ -93,18 +79,8 @@ typedef struct s_player
 	t_img		so_img;
 	t_img		ea_img;
 	t_img		we_img;
-	int			width_no;
-	int			height_no;
-	int			width_so;
-	int			height_so;
-	int			width_ea;
-	int			height_ea;
-	int			height_we;
-	int			width_we;
-	t_img		texture[4];
 	int			floor_color;
 	int			ciel_color;
-	t_texture	textures[4];
 	t_ray		rays[NUM_RAYS];
 	int			map_row;
 	int			map_col;
@@ -119,18 +95,11 @@ typedef struct s_data
 	int		wall_bottom;
 	int		x_pos;
 	int		y_pos;
-	int		texture_index;
 	int		texture_x;
 	int		texture_y;
 	int		x;
 	int		y;
-	int		px;
-	int		py;
 	int		color;
-	int		tex_y;
-	int		tex_x;
-	int		y_offset;
-	int		x_offset;
 	char	*n_pos;
 	char	*s_pos;
 	char	*e_pos;
@@ -208,4 +177,5 @@ int		not_mur_or_space(char c);
 int		valid_space(t_player *p, int i, int j);
 int		only_digits(char *s);
 int		is_texture_line(char *trimmed);
+int		space_line(char *line);
 #endif
