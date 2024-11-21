@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:36:58 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 17:39:22 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/21 13:08:19 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	put_pixel(t_player *player, int x, int y, int color)
 
 	if (x >= 0 && x < SW && y >= 0 && y < SH)
 	{
-		dst = player->img_data + \
-		(y * player->line_length + x * (player->bpp / 8));
+		dst = player->img->data + \
+		(y * player->img->line_length + x * (player->img->bpp / 8));
 		*(unsigned int *)dst = color;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:38:45 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/20 17:29:15 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/21 15:14:27 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int	key_eshap(int keycode, t_player *player)
 	cast_all_rays(player);
 	draw_pistol(player);
 	draw_map(player);
-	mlx_put_image_to_window(player->mlx, player->window, player->img, 0, 0);
+	mlx_put_image_to_window(player->mlx, player->window, \
+	player->img->img, 0, 0);
 	return (0);
 }

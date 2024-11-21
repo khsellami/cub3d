@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:55:20 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/16 14:03:41 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/21 17:40:43 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	init_player(t_player *p)
 	p->rotationangle = M_PI / 3;
 	p->movespeed = 25;
 	p->rotationspeed = 2 * (M_PI / 180);
+	p->radius = 2;
 }
 
 void	init_rays(t_player *p)
@@ -47,11 +48,12 @@ int	init(t_player *p)
 	init_rays(p);
 	p->mlx = NULL;
 	p->window = NULL;
-	p->img = NULL;
-	p->img_data = NULL;
-	p->bpp = 0;
-	p->line_length = 0;
-	p->endian = 0;
+	p->img = malloc(sizeof(t_img));
+	p->img->img = NULL;
+	p->img->data = NULL;
+	p->img->bpp = 0;
+	p->img->line_length = 0;
+	p->img->endian = 0;
 	p->no = NULL;
 	p->so = NULL;
 	p->ea = NULL;

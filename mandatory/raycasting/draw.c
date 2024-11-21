@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:42:37 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/20 19:01:41 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/21 16:14:06 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	render_wall_slice(t_player *player, t_data *data, t_img *texture)
 		data->texture_y = d % texture->height;
 		if (data->texture_y < 0 || data->texture_y >= texture->height)
 			return ;
-		color = *(int *)(texture->data + (data->texture_y * \
+		color = *(unsigned int *)(texture->data + (data->texture_y * \
 		texture->line_length + data->texture_x * (texture->bpp / 8)));
 		if (color == 0)
 			color = 0x00FF00;

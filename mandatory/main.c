@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:13 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/20 13:20:28 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/21 15:09:29 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,23 @@ int	create_game(t_player *p)
 	p->window = mlx_new_window(p->mlx, SW, SH, "Cub3D");
 	if (!p->window)
 		return (1);
-	p->img = mlx_new_image(p->mlx, SW, SH);
-	if (!p->img)
+	p->img->img = mlx_new_image(p->mlx, SW, SH);
+	if (!p->img->img)
 	{
 		mlx_destroy_window(p->mlx, p->window);
 		return (1);
 	}
-	p->img_data = mlx_get_data_addr(p->img, &p->bpp, \
-	&p->line_length, &p->endian);
-	if (!p->img_data)
+	p->img->data = mlx_get_data_addr(p->img->img, &p->img->bpp, \
+	&p->img->line_length, &p->img->endian);
+	if (!p->img->data)
 	{
-		mlx_destroy_image(p->mlx, p->img);
+		mlx_destroy_image(p->mlx, p->img->img);
 		mlx_destroy_window(p->mlx, p->window);
 		return (1);
 	}
 	clear_screen(p);
 	cast_all_rays(p);
-	mlx_put_image_to_window(p->mlx, p->window, p->img, 0, 0);
+	mlx_put_image_to_window(p->mlx, p->window, p->img->img, 0, 0);
 	return (0);
 }
 

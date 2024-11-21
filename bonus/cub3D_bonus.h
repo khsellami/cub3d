@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/20 19:21:26 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/21 16:38:09 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,14 @@
 # include <math.h>
 # include <limits.h>
 # define BUFFER_SIZE 6
-# define SW 1900
-# define SH 1000
+# define SW 1000
+# define SH 800
 # define TILE_SIZE 32
 # define FOV_ANGLE 1.04719755119659763132
 # define NUM_RAYS SW
 # define NUM_FRAMES 9
+# define LEFT_ARROW 123
+# define RIGHT_ARROW 124
 
 typedef struct s_img
 {
@@ -76,11 +78,7 @@ typedef struct s_player
 	double		rotationspeed;
 	void		*mlx;
 	void		*window;
-	void		*img;
-	char		*img_data;
-	int			bpp;
-	int			line_length;
-	int			endian;
+	t_img		*img;
 	char		**map;
 	char		*no;
 	char		*so;
@@ -95,6 +93,7 @@ typedef struct s_player
 	t_ray		rays[NUM_RAYS];
 	int			map_row;
 	int			map_col;
+	int			key_to_oriented;
 }	t_player;
 
 typedef struct s_data

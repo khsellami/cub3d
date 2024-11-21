@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/20 19:17:25 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/21 15:15:17 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,7 @@ typedef struct s_player
 	double		rotationspeed;
 	void		*mlx;
 	void		*window;
-	void		*img;
-	char		*img_data;
-	int			bpp;
-	int			line_length;
-	int			endian;
+	t_img		*img;
 	char		**map;
 	char		*no;
 	char		*so;
@@ -160,7 +156,6 @@ double distance, t_data *data);
 void	render_wall_slice(t_player *player, t_data *data, t_img *texture);
 void	render_3d_wall_slice(t_player *player, int ray_id, double distance);
 int		close_window(t_player *player);
-void	rotate_player(int keycode, t_player *player);
 void	move_player(int keycode, t_player *player);
 int		key_eshap(int keycode, t_player *player);
 void	clear_screen(t_player *player);
