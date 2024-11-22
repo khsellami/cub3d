@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:38:45 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/21 15:14:27 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/22 12:58:43 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ void	move_player(int keycode, t_player *player)
 	new_y = player->y;
 	calcul_nw_p(keycode, player, &new_x, &new_y);
 	if (keycode == 123)
-		player->rotationangle -= player->rotationspeed;
+		player->rotationangle -= player->rotationspeed * 1.5;
 	else if (keycode == 124)
-		player->rotationangle += player->rotationspeed;
+		player->rotationangle += player->rotationspeed * 1.5;
 	if (!is_wall(new_x, new_y, player) && wall_collisions(player, new_x, new_y))
 	{
 		player->x = new_x;

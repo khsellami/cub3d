@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/21 15:15:17 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/22 12:39:31 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # define TILE_SIZE 32
 # define FOV_ANGLE 1.04719755119659763132
 # define NUM_RAYS SW
+# define TEXT1 "ERROR\nProblem in colors and textures\n"
+# define TEXT2 "ERROR\nProblem in textures or colors\n"
 
 typedef struct s_img
 {

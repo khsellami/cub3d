@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 20:42:37 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/21 16:14:18 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/22 12:49:08 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,10 @@ int	wall_collisions(t_player *data, int i, int j)
 	int	x;
 	int	y;
 
-	x = (int)floor(j / TILE_SIZE);
-	y = (int)floor(i / TILE_SIZE);
-	if (data->map[x][(int)floor(data->x / TILE_SIZE)] == '1' && \
-	data->map[(int)floor(data->y / TILE_SIZE)][y] == '1')
+	x = (int)(j / TILE_SIZE);
+	y = (int)(i / TILE_SIZE);
+	if (data->map[x][(int)(data->x / TILE_SIZE)] == '1' && \
+	data->map[(int)(data->y / TILE_SIZE)][y] == '1')
 		return (0);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 18:55:20 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/21 14:48:27 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/22 11:09:04 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int	init(t_player *p)
 	p->mlx = NULL;
 	p->window = NULL;
 	p->img = malloc(sizeof(t_img));
+	if (!p->img)
+		return (1);
 	p->img->img = NULL;
 	p->img->data = NULL;
 	p->img->bpp = 0;

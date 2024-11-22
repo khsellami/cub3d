@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/21 16:38:09 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/22 12:48:04 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@
 # include <math.h>
 # include <limits.h>
 # define BUFFER_SIZE 6
-# define SW 1000
-# define SH 800
+# define SW 1900
+# define SH 1000
 # define TILE_SIZE 32
 # define FOV_ANGLE 1.04719755119659763132
 # define NUM_RAYS SW
 # define NUM_FRAMES 9
-# define LEFT_ARROW 123
-# define RIGHT_ARROW 124
+# define TEXT1 "ERROR\nProblem in colors and textures\n"
+# define TEXT2 "ERROR\nProblem in textures or colors\n"
 
 typedef struct s_img
 {

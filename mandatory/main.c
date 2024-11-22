@@ -6,7 +6,7 @@
 /*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:13 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/21 15:09:29 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/22 12:39:16 by kahmada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,20 +81,20 @@ int	main(int ac, char **av)
 	if (init(&p) == -1)
 		return (ft_putstr_fd("ERROR\nProblem in init data\n", 2), 1);
 	if (parse_colors_textures(av, &p) == -1)
-		return (ft_putstr_fd("ERROR\nProblem in colors and textures\n", 2), 1);
+		return (free(p.img), ft_putstr_fd(TEXT1, 2), 1);
 	if (check_clr_txt(&p))
-		return (ft_putstr_fd("ERROR\nProblem in textures or colors\n", 2), 1);
+		return (free(p.img), ft_putstr_fd(TEXT2, 2), 1);
 	if (ft_read_map(av, &p) == -1)
-		return (ft_putstr_fd("ERROR\nread map\n", 2), 1);
+		return (free(p.img), ft_putstr_fd("ERROR\nread map\n", 2), 1);
 	if (check_one_player(&p) == -1)
-		return (ft_putstr_fd("ERROR\nplayer\n", 2), 1);
+		return (free(p.img), ft_putstr_fd("ERROR\nplayer\n", 2), 1);
 	stock_dim_map(&p);
 	if (!valid_map(&p))
-		return (ft_putstr_fd("ERROR\nInvalid map\n", 2), 1);
+		return (free(p.img), ft_putstr_fd("ERROR\nInvalid map\n", 2), 1);
 	if (create_game(&p))
-		return (1);
+		return (free(p.img), 1);
 	mlx_hook(p.window, 2, 0, key_eshap, &p);
 	mlx_hook(p.window, 17, 0, close_window, &p);
 	mlx_loop(p.mlx);
-	return (0);
+	return (free(p.img), 0);
 }
