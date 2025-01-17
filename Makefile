@@ -6,14 +6,14 @@
 #    By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/16 18:59:05 by kahmada           #+#    #+#              #
-#    Updated: 2024/11/20 17:33:41 by kahmada          ###   ########.fr        #
+#    Updated: 2025/01/17 15:37:29 by kahmada          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME       = cub3d
+NAME       = cub3D
 BONUS_NAME = cub3D_bonus
 CC         = cc
-CFLAGS     = -Wall -Werror -Wextra -g -fsanitize=address
+CFLAGS     = -Wall -Werror -Wextra
 RM         = rm -f
 
 SRC = mandatory/parsing/parse_clrs_txt.c mandatory/parsing/parse_clrs_txt_utils1.c mandatory/parsing/check_file.c \

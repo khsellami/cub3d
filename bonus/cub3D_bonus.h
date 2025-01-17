@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kahmada <kahmada@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ksellami <ksellami@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 15:49:54 by ksellami          #+#    #+#             */
-/*   Updated: 2024/11/22 12:48:04 by kahmada          ###   ########.fr       */
+/*   Updated: 2024/11/22 14:36:33 by ksellami         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ typedef struct s_player
 	t_ray		rays[NUM_RAYS];
 	int			map_row;
 	int			map_col;
-	int			key_to_oriented;
 }	t_player;
 
 typedef struct s_data
@@ -148,7 +147,6 @@ int		parse_texture_line(char *trimmed, t_player *p);
 int		parse_color_line(char *trimmed, t_player *p);
 int		parse_colors_textures(char **av, t_player *p);
 void	stocke_map_line(char *line, int size, t_player *p, int j);
-int		just_spaces(char *s);
 int		count_map_lines(int fd, int *longest_line);
 void	read_map_lines(int fd, int longest_line, t_player *p);
 int		ft_read_map(char **av, t_player *p);
